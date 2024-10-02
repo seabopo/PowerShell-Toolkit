@@ -15,7 +15,7 @@ Push-Location -Path $PSScriptRoot
 
 $ErrorActionPreference = "Stop"
 
-Import-Module '../po.PowerShellToolkit/' -Force
+Import-Module '../po.Toolkit/' -Force
 
 $env:PS_PIPELINEOBJECT_LOGGING             = $false
 $env:PS_PIPELINEOBJECT_DONTLOGPARAMS       = $false

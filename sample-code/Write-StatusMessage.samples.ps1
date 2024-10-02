@@ -15,7 +15,7 @@ Push-Location -Path $PSScriptRoot
 
 $ErrorActionPreference = "Stop"
 
-Import-Module '../po.PowerShellToolkit/' -Force
+Import-Module '../po.Toolkit/' -Force
 
 $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
 $env:PS_STATUSMESSAGE_LABELS                = $false

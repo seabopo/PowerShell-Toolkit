@@ -43,7 +43,7 @@ When the PipelineObject is called it inspects the PowerShell function that invok
 contains a set of key/value pairs based on the invocation function's defined parameters.
 
 The 'Initialize-PipelineObject' workflow is:
-  1. Initialize a new PipelineObject hashtable if an existing hashtable was not passed to the object.
+  1. Initialize a new PipelineObject HashTable if an existing HashTable was not passed to the object.
   2. Add the invocation data (call date, time, user, calling function, ect...) of the event to the 
      PipelineObject's '_InvocationData' property.
   3. Inspect the public definition of the function and add every user-defined parameter to the PipelineObject as
@@ -58,7 +58,7 @@ The 'Initialize-PipelineObject' workflow is:
 The PipelineObject contains 3 additional, custom properties when it is returned:
   1. Success = a boolean indicating whether the Initialize-PipelineObject process completed successfully.
   2. ResultMessage = a description of the initialization result, which will be the error message if success=$false.
-  3. _Invocation = A hashtable containing the invocation history of the object, used for debug logging.
+  3. _Invocation = A HashTable containing the invocation history of the object, used for debug logging.
 
 The PipelineObject includes a 'Tests' parameter, which allows you to perform some basic null testing. This 
 parameter is provided because the values for a function may be passed to it via the PipelineObject and not
@@ -165,7 +165,7 @@ function Add-MoreData2 {
     [Parameter()] [String] $StringParam4,
     [Parameter()] [String] $StringParam5,
 
-    [Parameter(ValueFromPipeline)] [Hashtable] $PipelineObject = @{}
+    [Parameter(ValueFromPipeline)] [HashTable] $PipelineObject = @{}
   )
 
 # Append to pipeline object, instead of re-initializing it ( $PipelineObject = Initialize-PipelineObject ).
@@ -174,7 +174,7 @@ function Add-MoreData2 {
 # Append more data to it.
   $PipelineObject.StringParam6 = 'Default text string 6'
 
-# Write it out to the pipleline for use by the calling cfunction.
+# Write it out to the PipeLine.
   Write-Output $PipelineObject
 }
 

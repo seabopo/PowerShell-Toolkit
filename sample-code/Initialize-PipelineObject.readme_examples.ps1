@@ -13,7 +13,7 @@ Clear-Host
 Set-Location  -Path $PSScriptRoot
 Push-Location -Path $PSScriptRoot
 
-Import-Module '../po.PowerShellToolkit/' -Force
+Import-Module '../po.Toolkit/' -Force
 
 $env:PS_PIPELINEOBJECT_LOGGING             = $false
 $env:PS_PIPELINEOBJECT_DONTLOGPARAMS       = $false
