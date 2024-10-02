@@ -1,4 +1,4 @@
-# po.PowerShellToolkit
+# PowerShellToolkit
 A PowerShell module of helper functions.
 
 ## Write-StatusMessage
