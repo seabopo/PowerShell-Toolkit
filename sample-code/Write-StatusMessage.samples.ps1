@@ -17,9 +17,24 @@ $ErrorActionPreference = "Stop"
 
 Import-Module '../po.Toolkit/' -Force
 
-$env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
-$env:PS_STATUSMESSAGE_LABELS                = $false
-$env:PS_STATUSMESSAGE_TIMESTAMPS            = $false
+# Set these control variables to determine the categories of certain functions
+
+# Determine which types of messages should be considered "verbose", and decide whether or not to show them.
+  $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Debug","Information"]'
+  $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
+
+# Determine which types of messages should have label (a 'Type' prefix), and decide whether or not to show them.
+  $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES = '["Debug","Success","Warning","Failure","Error","Exception"]'
+
+# Set global overrides of the function-level parameters. The default values are used below.
+  $env:PS_STATUSMESSAGE_LABELS              = $false
+  $env:PS_STATUSMESSAGE_TIMESTAMPS          = $false
+  $env:PS_STATUSMESSAGE_INDENTATION_STRING  = '...'
+  $env:PS_STATUSMESSAGE_BANNER_STRING       = '-'
+  $env:PS_STATUSMESSAGE_BANNER_LENGTH       = 80
+  $env:PS_STATUSMESSAGE_COLOR_BANNERS       = $false
+  $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10
+  $env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS  = $false
 
 #==================================================================================================================
 # Run Status Message Tests
@@ -149,19 +164,6 @@ $env:PS_STATUSMESSAGE_LABELS     = $false
 $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
 
 #==================================================================================================================
-# Run Exeption Error Tests
-#==================================================================================================================
-
-Write-Msg -p -m " Auto-Generated Error Message Examples" -b -ds -ps
-
-try {
-    write-host ('test:{0}{3}' -f 'red','green')
-}
-catch {
-    Write-Msg -x -m "custom error message`r`n" -o $_
-}
-
-#==================================================================================================================
 # Run Debug Object Tests
 #==================================================================================================================
 
@@ -281,3 +283,39 @@ Write-Msg -d -ds -m 'Debug Object: ' -o $testHashTable
 Write-Msg -d -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 5
 
 Write-Msg -d -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 30
+
+
+#==================================================================================================================
+# Run Exeption Error Tests
+#==================================================================================================================
+
+Write-Msg -p -m " Auto-Generated Error Message Examples" -b -ds -ps
+
+try {
+    write-host ('test:{0}{3}' -f 'red','green')
+}
+catch {
+    Write-Msg -x -m "custom error message`r`n" -o $_
+}
+
+try {
+    Invoke-NonExistentFunction
+}
+catch {
+    Write-Msg -x -o $_
+}
+
+# try {
+#     Invoke-NonExistentFunction
+# }
+# catch {
+#     Write-Msg -x -o $_ -rx
+# }
+
+$env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS = $true
+try {
+    Invoke-NonExistentFunction
+}
+catch {
+    Write-Msg -x -o $_
+}

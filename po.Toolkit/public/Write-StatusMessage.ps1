@@ -158,6 +158,9 @@ function Write-StatusMessage {
     .PARAMETER PreSpace
         OPTIONAL. Switch. Alias: -ps. Adds a blank line before the logged item.
 
+    .PARAMETER RethrowException
+        OPTIONAL. Switch. Alias: -rx. Re-throws the exception after writing the log message.
+
     .PARAMETER Object
         OPTIONAL. Alias: -o. An object whose properties will be written to the console. The object is
         converted to a JSON object for display to the screen.
@@ -236,6 +239,8 @@ function Write-StatusMessage {
         [Alias('bl')] [Int]            $BannerLength = [System.Convert]::ToInt32($env:PS_STATUSMESSAGE_BANNER_LENGTH),
         [Alias('cb')] [Switch]         $ColorBanners = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_COLOR_BANNERS),
 
+        [Alias('rx')] [Switch]         $RethrowException = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS),
+
         [Alias('ds')] [Switch]         $DoubleSpace,
         [Alias('ps')] [Switch]         $PreSpace,
 
@@ -287,6 +292,18 @@ function Write-StatusMessage {
 
             if ($_.Exception.Message -ne "MessageTypeShouldNotBeWritten") {
                 Write-ExceptionMessage -e $_
+            }
+
+        }
+        finally {
+
+            if ( $messageObject.type -eq 'Exception' -and $RethrowException ) {
+                if ( $Object -is [System.Management.Automation.ErrorRecord] ) {
+                    throw $Object.Exception
+                }
+                else {
+                    throw $Message
+                }
             }
 
         }

@@ -54,6 +54,7 @@ if ($null -eq $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH) { $env:PS_STATUSMESSAGE
 # $env:PS_STATUSMESSAGE_COLOR_BANNERS            = $false
 # $env:PS_STATUSMESSAGE_COLOR_DEBUG_OBJECTS      = $false
 # $env:PS_STATUSMESSAGE_USE_ALL_OUTPUT_STREAMS   = $false
+# $env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS       = $false
 
 
 #==================================================================================================================
