@@ -123,6 +123,8 @@ function Test-PipelineObjectStep3 {
 
     process {
 
+        Write-Msg -w -ps -ds -m ( 'Feed a missing parameter to generate an error.' )
+
         $PO,$id = Initialize-PipelineObject -l -o -r -t @{ AnyIsNull = @('StringParamX','IntentionallyBadTestParam') }
 
     }

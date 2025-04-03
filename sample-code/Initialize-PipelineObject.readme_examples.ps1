@@ -202,6 +202,8 @@ function Test-PipelineObject4 {
 # Create a new PipelineObject
   $PipelineObject, $InvocationID = Initialize-PipelineObject -ReturnInvocationID
 
+  Write-Msg -w -ps -m 'Throw an exception to test the trap.'
+
   try {
       Throw 'This is a test exception'
   }

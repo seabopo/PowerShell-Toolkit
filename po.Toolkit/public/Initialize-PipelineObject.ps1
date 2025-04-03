@@ -10,12 +10,12 @@ Function Initialize-PipelineObject {
 
     .OUTPUTS
         A hashtable which contains:
-          - A key/value pair for every defined paramater, populated with either the bound (passed) values, the
+          - A key/value pair for every defined parameter, populated with either the bound (passed) values, the
             default values or null.
-          - A key/value pair for every common paramater if:
-              - The [CmdletBinding()] attribute is defined in the funciton.
+          - A key/value pair for every common parameter if:
+              - The [CmdletBinding()] attribute is defined in the function.
               - The IncludeCommonParameters switch is passed.
-          - An 'invocation' key (hashtable) containing information realted to the function call, including user,
+          - An 'invocation' key (hashtable) containing information related to the function call, including user,
             device, IP address, date/time, command, function alias, callstack and additional related items.
 
     .PARAMETER PipelineObject
@@ -23,7 +23,7 @@ Function Initialize-PipelineObject {
         functions will append the invocation and parameter data.
 
     .PARAMETER Tests
-        OPTIONAL. Hashtable. Alias: -t. Determines if the commom powershell paramaters should be included
+        OPTIONAL. Hashtable. Alias: -t. Determines if the common powershell parameters should be included
         in the pipeline object. This also requires that [CmdletBinding()] is defined in teh calling function.
 
     .PARAMETER ReturnInvocationID
@@ -67,7 +67,7 @@ Function Initialize-PipelineObject {
               object types, so the value must be stored in JSON array format: '["Invocation","Token"]'
 
     .PARAMETER IncludeCommonParameters
-        OPTIONAL. Switch. Alias: -i, -icp. Determines if the commom powershell paramaters should be included
+        OPTIONAL. Switch. Alias: -i, -icp. Determines if the common powershell parameters should be included
         in the pipeline object. This also requires that [CmdletBinding()] is defined in teh calling function.
         This value can be set using an environment variable.
             Example: $env:PS_PIPELINEOBJECT_INCLUDECOMMONPARAMS = $true

@@ -13,16 +13,16 @@ function Write-StatusMessage {
         OPTIONAL. String. Alias: -t. The type of message to write. Default value: 'Action'.
 
         The type determines several properties of the output, including the color, label and when the messages
-        are supressed. The type of message can also be set using the following switches: -Header, -Process,
+        are suppressed. The type of message can also be set using the following switches: -Header, -Process,
         -Action, -Information, Dbg, -Success, -Warning, -Failure, -Err -ExceptionError
 
         Message types of Header, Process, Information, and Debug are by default considered verbose and are only
         shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES is set to true. This list can be modified by updating
-        the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment variable. The value of this variable should be a
+        the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES environment variable. The value of this variable should be a
         JSON array of strings since environment variables can only store strings.
         Examples:
-            $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES  = $true
-            $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS = '["Header","Process","Debug","Information"]'
+            $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
+            $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Header","Process","Debug","Information"]'
 
         By default, all messages are written using the Write-Host function. Writing to the other PowerShell
         output streams can be enabled by setting the PS_STATUSMESSAGE_USE_ALL_OUTPUT_STREAMS environment variable
@@ -49,52 +49,52 @@ function Write-StatusMessage {
                 Write-Debug    :: Controlled by $DebugPreference: SilentlyContinue (hidden) or Continue (shown).
                 Write-Verbose  :: Controlled by $VerbosePreference: SilentlyContinue (hidden) or Continue (shown).
 
-                The Write-Functions use the standard user preference variables values to determin if the message
+                The Write-Functions use the standard user preference variables values to determine if the message
                 should be displayed. Setting the preference to SilentlyContinue will hide the messages and
                 setting the preference to Continue will show the messages.
 
     .PARAMETER Header
-        OPTIONAL. Switch. Alias: -h. Switch alternative for the Header Type paramater. Message Color: Magenta.
+        OPTIONAL. Switch. Alias: -h. Switch alternative for the Header Type parameter. Message Color: Magenta.
         Header messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
-        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES environment
         variable.
 
     .PARAMETER Process
-        OPTIONAL. Switch. Alias: -p. Switch alternative for the Process Type paramater. Message Color: Cyan.
+        OPTIONAL. Switch. Alias: -p. Switch alternative for the Process Type parameter. Message Color: Cyan.
         Process messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
-        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES environment
         variable.
 
     .PARAMETER Action
-        OPTIONAL. Switch. Alias: -a. Switch alternative for the Action Type paramater. Message Color: Gray.
+        OPTIONAL. Switch. Alias: -a. Switch alternative for the Action Type parameter. Message Color: Gray.
         Action is the default message type if no type is specified. Action messages are always shown.
 
     .PARAMETER Information
-        OPTIONAL. Switch. Alias: -i. Switch alternative for the Information Type paramater. Message Color: DarkGray.
+        OPTIONAL. Switch. Alias: -i. Switch alternative for the Information Type parameter. Message Color: DarkGray.
         Information messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
-        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES environment
         variable.
 
     .PARAMETER Dgb
-        OPTIONAL. Switch. Alias: -d. Switch alternative for the Debug Type paramater. Message Color: DarkGray.
+        OPTIONAL. Switch. Alias: -d. Switch alternative for the Debug Type parameter. Message Color: DarkGray.
         Debug messages are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES environment variable is
-        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPESS environment
+        set to true. This can be changed by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES environment
         variable.
 
     .PARAMETER Success
-        OPTIONAL. Switch. Alias: -s. Switch alternative for the Success Type paramater. Message Color: Green.
+        OPTIONAL. Switch. Alias: -s. Switch alternative for the Success Type parameter. Message Color: Green.
 
     .PARAMETER Warning
-        OPTIONAL. Switch. Alias: -w. Switch alternative for the Warning Type paramater. Message Color: Yellow.
+        OPTIONAL. Switch. Alias: -w. Switch alternative for the Warning Type parameter. Message Color: Yellow.
 
     .PARAMETER Failure
-        OPTIONAL. Switch. Alias: -f. Switch alternative for the Failure Type paramater. Message Color: Red.
+        OPTIONAL. Switch. Alias: -f. Switch alternative for the Failure Type parameter. Message Color: Red.
 
     .PARAMETER Err
-        OPTIONAL. Switch. Alias: -e. Switch alternative for the Error Type paramater. Message Color: Red.
+        OPTIONAL. Switch. Alias: -e. Switch alternative for the Error Type parameter. Message Color: Red.
 
     .PARAMETER Exception
-        OPTIONAL. Switch. Alias: -x. Switch alternative for the Exception Type paramater. Message Color: Red.
+        OPTIONAL. Switch. Alias: -x. Switch alternative for the Exception Type parameter. Message Color: Red.
         Assigning the Error object to the MessageObject parameter for this type of message will automatically
         generate an exception message based on the error details and append it to the message parameter.
 
@@ -167,7 +167,7 @@ function Write-StatusMessage {
 
     .PARAMETER MaxRecursionDepth
         OPTIONAL. Integer. Alias: -rd. The maximum depth of recursion when converting the item specified by the
-        object parameter to a JSON string. Default value: 3. The powreshell maxium value is 100.
+        object parameter to a JSON string. Default value: 3. The PowerShell maximum value is 100.
         This value can be set using an environment variable.
             Example: $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10
 

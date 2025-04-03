@@ -43,7 +43,7 @@ Import-Module '../po.Toolkit/' -Force
 Write-StatusMessage -Type 'Header' -Message " Status Message Examples" -DoubleBanner -ColorBanners
 
 
-Write-StatusMessage -Type 'Process' -Message " Full Paramater Names Tests" -Banner -DoubleSpace -PreSpace
+Write-StatusMessage -Type 'Process' -Message " Full Parameter Names Tests" -Banner -DoubleSpace -PreSpace
 
 Write-StatusMessage -Type 'Header'      -Message 'Header Message ...'      -Labels -TimeStamps
 Write-StatusMessage -Type 'Process'     -Message 'Process Message ...'     -Labels -TimeStamps
@@ -57,7 +57,7 @@ Write-StatusMessage -Type 'Error'       -Message 'Error Message ...'       -Labe
 Write-StatusMessage -Type 'Exception'   -Message 'Exception Message ...'   -Labels -TimeStamps
 
 
-Write-StatusMessage -t 'Process' -m " Alias Paramater Names Tests" -b -ds -ps
+Write-StatusMessage -t 'Process' -m " Alias Parameter Names Tests" -b -ds -ps
 
 Write-StatusMessage -t 'Header'      -m 'Header Message ...'      -l -ts
 Write-StatusMessage -t 'Process'     -m 'Process Message ...'     -l -ts
@@ -71,7 +71,7 @@ Write-StatusMessage -t 'Error'       -m 'Error Message ...'       -l -ts
 Write-StatusMessage -t 'Exception'   -m 'Exception Message ...'   -l -ts
 
 
-Write-StatusMessage -Type 'Process' -Message " Full Switch Paramater Names Tests" -Banner -DoubleSpace -PreSpace
+Write-StatusMessage -Type 'Process' -Message " Full Switch Parameter Names Tests" -Banner -DoubleSpace -PreSpace
 
 Write-StatusMessage -Header      -Message 'Header Message ...'      -Labels -TimeStamps
 Write-StatusMessage -Process     -Message 'Process Message ...'     -Labels -TimeStamps
@@ -85,7 +85,7 @@ Write-StatusMessage -Err         -Message 'Error Message ...'       -Labels -Tim
 Write-StatusMessage -Exception   -Message 'Exception Message ...'   -Labels -TimeStamps
 
 
-Write-StatusMessage -p -m " Alias Switch Paramater Names Tests" -b -ds -ps
+Write-StatusMessage -p -m " Alias Switch Parameter Names Tests" -b -ds -ps
 
 Write-StatusMessage -h -m 'Header Message ...'      -l -ts
 Write-StatusMessage -p -m 'Process Message ...'     -l -ts
@@ -286,11 +286,12 @@ Write-Msg -d -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 
 
 
 #==================================================================================================================
-# Run Exeption Error Tests
+# Run Exception Error Tests
 #==================================================================================================================
 
 Write-Msg -p -m " Auto-Generated Error Message Examples" -b -ds -ps
 
+Write-Msg -w -m "Generate a custom error message." -ds
 try {
     write-host ('test:{0}{3}' -f 'red','green')
 }
@@ -298,6 +299,7 @@ catch {
     Write-Msg -x -m "custom error message`r`n" -o $_
 }
 
+Write-Msg -w -m "Generate an automatically handled exception message." -ps
 try {
     Invoke-NonExistentFunction
 }
@@ -312,6 +314,7 @@ catch {
 #     Write-Msg -x -o $_ -rx
 # }
 
+Write-Msg -w -m "Test re-throwing an exception." -ps
 $env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS = $true
 try {
     Invoke-NonExistentFunction

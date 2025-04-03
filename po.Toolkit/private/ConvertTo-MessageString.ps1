@@ -9,7 +9,7 @@ Function ConvertTo-MessageString {
 
     .PARAMETER MaxDepth
         OPTIONAL. Integer. Alias: -d. The maximum depth of recursion when converting the Object to a JSON string.
-        Default value: 100 (the powreshell max).
+        Default value: 100 (the PowerShell max).
 
     .PARAMETER MultiLinePrefix
         OPTIONAL. String. Alias: -p. A string to prefix each line for an object that requires a multi-line
