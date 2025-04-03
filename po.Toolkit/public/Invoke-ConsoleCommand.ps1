@@ -1,10 +1,7 @@
 function Invoke-ConsoleCommand {
     <#
-    .SYNOPSIS
-        Invokes a console command.
-
     .DESCRIPTION
-        Invokes a console command which is passed as a string array or commands, values and parameters.
+        Invokes a console command which is passed as a string array of commands, values and parameters.
 
     .OUTPUTS
         A PSCustomObject with the following properties:
@@ -33,6 +30,9 @@ function Invoke-ConsoleCommand {
 
     .EXAMPLE
         Invoke-ConsoleCommand -Command @('c:\windows\notepad.exe','C:\file.txt') -r 3 -d 10
+
+    .EXAMPLE
+        Invoke-ConsoleCommand -Command 'launchctl list' -r 3 -d 10 -s
     #>
     [OutputType([PSCustomObject])]
     [CmdletBinding()]
@@ -91,7 +91,9 @@ function Invoke-ConsoleCommand {
                     }
 
                     $r.duration = [Math]::Round((New-TimeSpan -Start $r.startTime -End (Get-Date)).TotalSeconds,0)
-                    Write-Msg -d -il 2 -m $( 'Command completed in {0} seconds.' -f $r.duration )
+                    if ( -not $Silent ) {
+                        Write-Msg -d -il 2 -m $( 'Command completed in {0} seconds.' -f $r.duration )
+                    }
 
                 }
                 catch {

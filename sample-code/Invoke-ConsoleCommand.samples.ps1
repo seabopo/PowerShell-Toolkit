@@ -30,3 +30,7 @@ $result.value
 $command = "launchctl list"
 $result = Invoke-ConsoleCommand -Command $command
 $result.value
+
+$command = "launchctl list"
+$result = Invoke-ConsoleCommand -Command $command -Silent
+$result.value
