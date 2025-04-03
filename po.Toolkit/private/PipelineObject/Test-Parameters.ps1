@@ -1,7 +1,7 @@
 Function Test-Parameters {
     <#
     .DESCRIPTION
-        Performs tests based on the values defined in the PipelineObject's Tests parameter. The Test paramater
+        Performs tests based on the values defined in the PipelineObject's Tests parameter. The Test parameter
         is a hashtable that supports the following values/tests:
          - AnyIsNull
          - AllAreNull
@@ -49,7 +49,7 @@ Function Test-Parameters {
                             $validationFailed, $failedValues = Test-IsNull -n $testName -v $params -r
                             if ( $validationFailed ) {
                                 $i.Tests.Successful = $false
-                                $i.Tests.Errors += $( '{0} test failed becasue these values are null: {1}' -f
+                                $i.Tests.Errors += $( '{0} test failed because these values are null: {1}' -f
                                                       $testName, $($failedValues -Join ','))
                             }
                         }

@@ -6,16 +6,16 @@ Function Remove-RecursiveObjectKey {
         A PowerShell function can have only one parameter that accepts input via the PipelineObject. This parameter
         is determined by applying the 'ValueFromPipeline' attribute to the parameter.
 
-        Each time the Initialize-PipelineObject funtion is invoked it uses the parameter that is tagged with the
+        Each time the Initialize-PipelineObject function is invoked it uses the parameter that is tagged with the
         'ValueFromPipeline' attribute from the calling function as the base object for its operations. If that
-        parameter wasn't already intialized as a HashTable it will be by the Initialize-PipelineObject function.
+        parameter wasn't already initialized as a HashTable it will be by the Initialize-PipelineObject function.
         That parameter is now accounted for in the PipelineObject.
 
         Once the PipelineObject object is initialized it adds all of the defined and bound parameters to the base
         object. Those parameters include a reference to the PipelineObject. This means that the base object will
         end up with a recursive reference to itself. This can lead to performance problems if it is not cleaned up.
 
-        Objects that have been initialzed by the Initialize-PipelineObject function will have an '_Invocation' key
+        Objects that have been initialized by the Initialize-PipelineObject function will have an '_Invocation' key
         and will exist in the BoundParameters collection. If this parameter is not in the bound parameters
         collection then it hasn't been passed via the pipeline and will be an empty HashTable.
     #>

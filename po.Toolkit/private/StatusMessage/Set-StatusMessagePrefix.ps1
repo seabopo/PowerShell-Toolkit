@@ -1,7 +1,7 @@
 function Set-StatusMessagePrefix {
     <#
     .DESCRIPTION
-        Sets the prefix ( TimeStamp | Lable | Indentation ) that will be added to each status message line.
+        Sets the prefix ( TimeStamp | Label | Indentation ) that will be added to each status message line.
     #>
     [OutputType([HashTable])]
     [CmdletBinding()]

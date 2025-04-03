@@ -37,6 +37,3 @@ function Set-StatusMessageColor {
 
     }
 }
-
-# write-host 'Some Test Text in DarkBlue   ' -ForegroundColor DarkBlue
-# write-host 'Some Test Text in White      ' -ForegroundColor White

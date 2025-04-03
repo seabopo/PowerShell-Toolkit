@@ -307,13 +307,6 @@ catch {
     Write-Msg -x -o $_
 }
 
-# try {
-#     Invoke-NonExistentFunction
-# }
-# catch {
-#     Write-Msg -x -o $_ -rx
-# }
-
 Write-Msg -w -m "Test re-throwing an exception." -ps
 $env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS = $true
 try {

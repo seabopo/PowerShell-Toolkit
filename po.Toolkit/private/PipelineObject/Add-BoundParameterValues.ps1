@@ -1,7 +1,7 @@
 Function Add-BoundParameterValues {
     <#
     .DESCRIPTION
-        Adds the values for the 'BoundParameters' collection (those paramaters which have values passed in) in the
+        Adds the values for the 'BoundParameters' collection (those parameters which have values passed in) in the
         callstack's invocation to the PipelineObject. BoundParameters will override any previously existing values
         in the PipelineObject.
     #>
