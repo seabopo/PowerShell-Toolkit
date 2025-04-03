@@ -6,11 +6,10 @@ function Invoke-ConsoleCommand {
     .OUTPUTS
         A PSCustomObject with the following properties:
             - Success: Boolean
-            - Result: String
-            - Errors: String
+            - Value: String
+            - Message: String
             - Command: String
             - StartTime: DateTime
-            - EndTime: DateTime
             - Duration: Int
 
     .PARAMETER Command
@@ -26,7 +25,8 @@ function Invoke-ConsoleCommand {
         OPTIONAL. Switch. Alias: -f. Do not consider a command failure an error.
 
     .PARAMETER Silent
-        OPTIONAL. Switch. Alias: -s. Do not log. Overrides the logging preferences set at the environment level.
+        OPTIONAL. Switch. Alias: -l. Do not display and log events. This overrides the logging preferences set
+        at the environment level.
 
     .EXAMPLE
         Invoke-ConsoleCommand -Command @('c:\windows\notepad.exe','C:\file.txt') -r 3 -d 10
@@ -42,14 +42,14 @@ function Invoke-ConsoleCommand {
         [Parameter()] [Alias('r')] [Int]      $Retries = 5,
         [Parameter()] [Alias('d')] [Int]      $RetryDelay = 15,
         [Parameter()] [Alias('f')] [Switch]   $FailureIsNotAnError,
-        [Parameter()] [Alias('s')] [Switch]   $Silent
+        [Parameter()] [Alias('x')] [Switch]   $Silent
     )
 
     process {
 
         try {
 
-            $r = @{
+            $r = [Ordered]@{
                 command   = $Command -join ' '
                 success   = $true
                 value     = $null
@@ -64,7 +64,7 @@ function Invoke-ConsoleCommand {
 
                 try {
 
-                    $r.StartTime = Get-Date
+                    $r.startTime = Get-Date
                     $commandErrors = $( $r.value = Invoke-Expression -Command $r.command ) 2>&1
                     if ( $commandErrors ) {
                         if ( $commandErrors -is [System.Management.Automation.ErrorRecord] ) {

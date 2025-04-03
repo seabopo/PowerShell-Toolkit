@@ -25,12 +25,15 @@ $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
 
 $command = "ps -ef | grep -i safari"
 $result = Invoke-ConsoleCommand -Command $command
+$result
 $result.value
 
 $command = "launchctl list"
 $result = Invoke-ConsoleCommand -Command $command
+$result
 $result.value
 
 $command = "launchctl list"
 $result = Invoke-ConsoleCommand -Command $command -Silent
+$result
 $result.value
