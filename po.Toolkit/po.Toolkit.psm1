@@ -22,18 +22,18 @@ Set-Variable -Scope 'Local' -Name "PS_MODULE_NAME" -Value $($PSScriptRoot | Spli
 # REQUIRED Environment Variables
 # The Following set of environment variables are REQUIRED for the module to function.
 
-# Initialize the user-definable "verbose" mesage types. Select from the following list:
+# Initialize the user-definable "verbose" message types. Select from the following list:
 # Header, Process, Action, Information, Debug, Success, Warning, Failure, Error and Exception.
 if ($null -eq $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES ) {
     $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Debug","Information"]'
 }
 
-# Initialze prefix labes. The default behavior is to not show labels, but to use colors instead.
+# Initialize prefix labels. The default behavior is to not show labels, but to use colors instead.
 if ($null -eq $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES ) {
     $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES = '["Debug","Success","Warning","Failure","Error","Exception"]'
 }
 
-# Initialize the paramaters to ignore when logging. The "_Invocation" parameter should always be ignored as it
+# Initialize the parameters to ignore when logging. The "_Invocation" parameter should always be ignored as it
 # is used in the PipelineObject.
 if ($null -eq $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON ) {
     $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON  = '["_Invocation"]'
