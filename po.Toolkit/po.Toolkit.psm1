@@ -24,26 +24,26 @@ Set-Variable -Scope 'Local' -Name "PS_MODULE_NAME" -Value $($PSScriptRoot | Spli
 
 # Initialize the user-definable "verbose" message types. Select from the following list:
 # Header, Process, Action, Information, Debug, Success, Warning, Failure, Error and Exception.
-if ($null -eq $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES ) {
+if ( $null -eq $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES ) {
     $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Debug","Information"]'
 }
 
 # Initialize prefix labels. The default behavior is to not show labels, but to use colors instead.
-if ($null -eq $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES ) {
+if ( $null -eq $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES ) {
     $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES = '["Debug","Success","Warning","Failure","Error","Exception"]'
 }
 
 # Initialize the parameters to ignore when logging. The "_Invocation" parameter should always be ignored as it
 # is used in the PipelineObject.
-if ($null -eq $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON ) {
+if ( $null -eq $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON ) {
     $env:PS_STATUSMESSAGE_IGNORE_PARAMS_JSON  = '["_Invocation"]'
 }
 
 # Initialize the REQUIRED message formatting preferences:
-if ($null -eq $env:PS_STATUSMESSAGE_INDENTATION_STRING ) { $env:PS_STATUSMESSAGE_INDENTATION_STRING  = '...' }
-if ($null -eq $env:PS_STATUSMESSAGE_BANNER_STRING      ) { $env:PS_STATUSMESSAGE_BANNER_STRING       = '-'   }
-if ($null -eq $env:PS_STATUSMESSAGE_BANNER_LENGTH      ) { $env:PS_STATUSMESSAGE_BANNER_LENGTH       = 80    }
-if ($null -eq $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH) { $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10    }
+if ( $null -eq $env:PS_STATUSMESSAGE_INDENTATION_STRING  ) { $env:PS_STATUSMESSAGE_INDENTATION_STRING  = '...' }
+if ( $null -eq $env:PS_STATUSMESSAGE_BANNER_STRING       ) { $env:PS_STATUSMESSAGE_BANNER_STRING       = '-'   }
+if ( $null -eq $env:PS_STATUSMESSAGE_BANNER_LENGTH       ) { $env:PS_STATUSMESSAGE_BANNER_LENGTH       = 80    }
+if ( $null -eq $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH ) { $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10    }
 
 # OPTIONAL Environment Variables
 # The following set of environment variables are OPTIONAL and can be set to customize the behavior of the module.
