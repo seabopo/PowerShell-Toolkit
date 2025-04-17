@@ -286,6 +286,15 @@ Write-Msg -d -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 5
 
 Write-Msg -d -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 30
 
+#==================================================================================================================
+# Run Function Call Tests
+#==================================================================================================================
+
+Write-Msg -p -m " Auto-Generated Function Call Examples" -b -ps
+
+function Invoke-FunctionCall1 { Write-Msg -c }
+Invoke-FunctionCall1
+
 
 #==================================================================================================================
 # Run Exception Error Tests
@@ -293,27 +302,42 @@ Write-Msg -d -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 
 
 Write-Msg -p -m " Auto-Generated Error Message Examples" -b -ds -ps
 
-Write-Msg -w -m "Generate a custom error message." -ds
-try {
-    write-host ('test:{0}{3}' -f 'red','green')
-}
-catch {
-    Write-Msg -x -m "custom error message`r`n" -o $_
-}
+function Invoke-ErrorTest1 {
 
-Write-Msg -w -m "Generate an automatically handled exception message." -ps
-try {
-    Invoke-NonExistentFunction
-}
-catch {
-    Write-Msg -x -o $_
-}
+    Write-Msg -w -m "Generate a custom error message." -ds
+    try {
+        write-host ('test:{0}{3}' -f 'red','green')
+    }
+    catch {
+        Write-Msg -x -m "custom error message`r`n" -o $_
+    }
 
-Write-Msg -w -m "Test re-throwing an exception." -ps
-$env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS = $true
-try {
-    Invoke-NonExistentFunction
 }
-catch {
-    Write-Msg -x -o $_
+Invoke-ErrorTest1
+
+function Invoke-ErrorTest2 {
+
+    Write-Msg -w -m "Generate an automatically handled exception message." -ps
+    try {
+        Invoke-NonExistentFunction
+    }
+    catch {
+        Write-Msg -x -o $_
+    }
+
 }
+Invoke-ErrorTest2
+
+function Invoke-ErrorTest3 {
+
+    Write-Msg -w -m "Test re-throwing an exception." -ps
+    $env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS = $true
+    try {
+        Invoke-NonExistentFunction
+    }
+    catch {
+        Write-Msg -x -o $_
+    }
+
+}
+Invoke-ErrorTest3
