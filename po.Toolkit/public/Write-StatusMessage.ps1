@@ -40,7 +40,7 @@ function Write-StatusMessage {
             InvocationSource Gray         -none-       No      
 
         Note: Specific types of messages can be ignored by setting the PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES
-              environment variable. The value of this variable must be a JSON array of strings
+              environment variable. The value of this variable must be a JSON array of strings.
               Example: $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES  = '["InvocationSource","FunctionCall"]'
 
     .PARAMETER Header
