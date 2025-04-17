@@ -13,17 +13,18 @@ function Set-StatusMessageColor {
 
             $MessageObject.MessageColor = switch ( $MessageObject.Type )
                                         {
-                                            "Header"      { "Magenta"    ; break }
-                                            "Process"     { "Cyan"       ; break }
-                                            "Action"      { "Gray"       ; break }
-                                            "Information" { "DarkGray"   ; break }
-                                            "Debug"       { "DarkGray"   ; break }
-                                            "Success"     { "DarkGreen"  ; break }
-                                            "Warning"     { "DarkYellow" ; break }
-                                            "Failure"     { "DarkRed"    ; break }
-                                            "Error"       { "Red"        ; break }
-                                            "Exception"   { "Red"        ; break }
-                                            default       { "Gray"       ; break }
+                                            "Header"           { "Magenta"    ; break }
+                                            "Process"          { "Cyan"       ; break }
+                                            "Action"           { "Gray"       ; break }
+                                            "Information"      { "DarkGray"   ; break }
+                                            "Debug"            { "DarkGray"   ; break }
+                                            "Success"          { "DarkGreen"  ; break }
+                                            "Warning"          { "DarkYellow" ; break }
+                                            "Failure"          { "DarkRed"    ; break }
+                                            "Error"            { "Red"        ; break }
+                                            "Exception"        { "Red"        ; break }
+                                            "InvocationSource" { "DarkGray"   ; break }
+                                            default            { "Gray"       ; break }
                                         }
 
             Write-Output $MessageObject

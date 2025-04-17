@@ -45,44 +45,45 @@ Write-StatusMessage -Type 'Header' -Message " Status Message Examples" -DoubleBa
 
 Write-StatusMessage -Type 'Process' -Message " Full Parameter Names Tests" -Banner -DoubleSpace -PreSpace
 
-Write-StatusMessage -Type 'Header'      -Message 'Header Message ...'      -Labels -TimeStamps
-Write-StatusMessage -Type 'Process'     -Message 'Process Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Type 'Action'      -Message 'Action Message ...'      -Labels -TimeStamps
-Write-StatusMessage -Type 'Information' -Message 'Information Message ...' -Labels -TimeStamps
-Write-StatusMessage -Type 'Debug'       -Message 'Debug Message ...'       -Labels -TimeStamps
-Write-StatusMessage -Type 'Success'     -Message 'Success Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Type 'Warning'     -Message 'Warning Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Type 'Failure'     -Message 'Failure Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Type 'Error'       -Message 'Error Message ...'       -Labels -TimeStamps
-Write-StatusMessage -Type 'Exception'   -Message 'Exception Message ...'   -Labels -TimeStamps
-
+Write-StatusMessage -Type 'Header'             -Message 'Header Message ...'      -Labels -TimeStamps
+Write-StatusMessage -Type 'Process'            -Message 'Process Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Type 'Action'             -Message 'Action Message ...'      -Labels -TimeStamps
+Write-StatusMessage -Type 'Information'        -Message 'Information Message ...' -Labels -TimeStamps
+Write-StatusMessage -Type 'Debug'              -Message 'Debug Message ...'       -Labels -TimeStamps
+Write-StatusMessage -Type 'Success'            -Message 'Success Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Type 'Warning'            -Message 'Warning Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Type 'Failure'            -Message 'Failure Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Type 'Error'              -Message 'Error Message ...'       -Labels -TimeStamps
+Write-StatusMessage -Type 'Exception'          -Message 'Exception Message ...'   -Labels -TimeStamps
+Write-StatusMessage -Type 'InvocationSource'                                      -Labels -TimeStamps
 
 Write-StatusMessage -t 'Process' -m " Alias Parameter Names Tests" -b -ds -ps
 
-Write-StatusMessage -t 'Header'      -m 'Header Message ...'      -l -ts
-Write-StatusMessage -t 'Process'     -m 'Process Message ...'     -l -ts
-Write-StatusMessage -t 'Action'      -m 'Action Message ...'      -l -ts
-Write-StatusMessage -t 'Information' -m 'Information Message ...' -l -ts
-Write-StatusMessage -t 'Debug'       -m 'Debug Message ...'       -l -ts
-Write-StatusMessage -t 'Success'     -m 'Success Message ...'     -l -ts
-Write-StatusMessage -t 'Warning'     -m 'Warning Message ...'     -l -ts
-Write-StatusMessage -t 'Failure'     -m 'Failure Message ...'     -l -ts
-Write-StatusMessage -t 'Error'       -m 'Error Message ...'       -l -ts
-Write-StatusMessage -t 'Exception'   -m 'Exception Message ...'   -l -ts
-
+Write-StatusMessage -t 'Header'           -m 'Header Message ...'      -l -ts
+Write-StatusMessage -t 'Process'          -m 'Process Message ...'     -l -ts
+Write-StatusMessage -t 'Action'           -m 'Action Message ...'      -l -ts
+Write-StatusMessage -t 'Information'      -m 'Information Message ...' -l -ts
+Write-StatusMessage -t 'Debug'            -m 'Debug Message ...'       -l -ts
+Write-StatusMessage -t 'Success'          -m 'Success Message ...'     -l -ts
+Write-StatusMessage -t 'Warning'          -m 'Warning Message ...'     -l -ts
+Write-StatusMessage -t 'Failure'          -m 'Failure Message ...'     -l -ts
+Write-StatusMessage -t 'Error'            -m 'Error Message ...'       -l -ts
+Write-StatusMessage -t 'Exception'        -m 'Exception Message ...'   -l -ts
+Write-StatusMessage -t 'InvocationSource'                              -l -ts
 
 Write-StatusMessage -Type 'Process' -Message " Full Switch Parameter Names Tests" -Banner -DoubleSpace -PreSpace
 
-Write-StatusMessage -Header      -Message 'Header Message ...'      -Labels -TimeStamps
-Write-StatusMessage -Process     -Message 'Process Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Action      -Message 'Action Message ...'      -Labels -TimeStamps
-Write-StatusMessage -Information -Message 'Information Message ...' -Labels -TimeStamps
-Write-StatusMessage -Dbg         -Message 'Debug Message ...'       -Labels -TimeStamps
-Write-StatusMessage -Success     -Message 'Success Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Warning     -Message 'Warning Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Failure     -Message 'Failure Message ...'     -Labels -TimeStamps
-Write-StatusMessage -Err         -Message 'Error Message ...'       -Labels -TimeStamps
-Write-StatusMessage -Exception   -Message 'Exception Message ...'   -Labels -TimeStamps
+Write-StatusMessage -Header             -Message 'Header Message ...'      -Labels -TimeStamps
+Write-StatusMessage -Process            -Message 'Process Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Action             -Message 'Action Message ...'      -Labels -TimeStamps
+Write-StatusMessage -Information        -Message 'Information Message ...' -Labels -TimeStamps
+Write-StatusMessage -Dbg                -Message 'Debug Message ...'       -Labels -TimeStamps
+Write-StatusMessage -Success            -Message 'Success Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Warning            -Message 'Warning Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Failure            -Message 'Failure Message ...'     -Labels -TimeStamps
+Write-StatusMessage -Err                -Message 'Error Message ...'       -Labels -TimeStamps
+Write-StatusMessage -Exception          -Message 'Exception Message ...'   -Labels -TimeStamps
+Write-StatusMessage -InvocationSource                                      -Labels -TimeStamps
 
 
 Write-StatusMessage -p -m " Alias Switch Parameter Names Tests" -b -ds -ps
@@ -97,21 +98,21 @@ Write-StatusMessage -w -m 'Warning Message ...'     -l -ts
 Write-StatusMessage -f -m 'Failure Message ...'     -l -ts
 Write-StatusMessage -e -m 'Error Message ...'       -l -ts
 Write-StatusMessage -x -m 'Exception Message ...'   -l -ts
-
+Write-StatusMessage -v                              -l -ts
 
 Write-StatusMessage -p -m " Test Indentation Levels with full names and labels" -b -ds -ps
 
-Write-StatusMessage -Type 'Action'    -Message 'Level 0 ...' -Labels -TimeStamps -IndentationLevel 0
-Write-StatusMessage -Type 'Action'    -Message 'Level 1 ...' -Labels -TimeStamps -IndentationLevel 1
-Write-StatusMessage -Type 'Action'    -Message 'Level 2 ...' -Labels -TimeStamps -IndentationLevel 2
-Write-StatusMessage -Type 'Action'    -Message 'Level 3 ...' -Labels -TimeStamps -IndentationLevel 3
-Write-StatusMessage -Type 'Action'    -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
-Write-StatusMessage -Type 'Debug'     -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
-Write-StatusMessage -Type 'Success'   -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
-Write-StatusMessage -Type 'Warning'   -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
-Write-StatusMessage -Type 'Error'     -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
-Write-StatusMessage -Type 'Exception' -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
-
+Write-StatusMessage -Type 'Action'           -Message 'Level 0 ...' -Labels -TimeStamps -IndentationLevel 0
+Write-StatusMessage -Type 'Action'           -Message 'Level 1 ...' -Labels -TimeStamps -IndentationLevel 1
+Write-StatusMessage -Type 'Action'           -Message 'Level 2 ...' -Labels -TimeStamps -IndentationLevel 2
+Write-StatusMessage -Type 'Action'           -Message 'Level 3 ...' -Labels -TimeStamps -IndentationLevel 3
+Write-StatusMessage -Type 'Action'           -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
+Write-StatusMessage -Type 'Debug'            -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
+Write-StatusMessage -Type 'Success'          -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
+Write-StatusMessage -Type 'Warning'          -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
+Write-StatusMessage -Type 'Error'            -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
+Write-StatusMessage -Type 'Exception'        -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
+Write-StatusMessage -Type 'InvocationSource' -Message 'Level 4 ...' -Labels -TimeStamps -IndentationLevel 4
 
 Write-StatusMessage -p -m " Test Indentation Levels with alias switches and no labels" -b -ds -ps
 
@@ -125,7 +126,7 @@ Write-StatusMessage -s -m 'Level 4 ...' -ts -il 4
 Write-StatusMessage -w -m 'Level 4 ...' -ts -il 4
 Write-StatusMessage -e -m 'Level 4 ...' -ts -il 4
 Write-StatusMessage -x -m 'Level 4 ...' -ts -il 4
-
+Write-StatusMessage -v                  -ts -il 4
 
 Write-StatusMessage -p -m " Test Environment Variables DISABLED" -b -ds -ps
 
@@ -142,7 +143,7 @@ Write-StatusMessage -w -m 'Warning Message ...'
 Write-StatusMessage -f -m 'Failure Message ...'
 Write-StatusMessage -e -m 'Error Message ...'
 Write-StatusMessage -x -m 'Exception Message ...'
-
+Write-StatusMessage -v
 
 Write-StatusMessage -p -m " Test Environment Variables ENABLED" -b -ds -ps
 
@@ -159,6 +160,7 @@ Write-StatusMessage -w -m 'Warning Message ...'
 Write-StatusMessage -f -m 'Failure Message ...'
 Write-StatusMessage -e -m 'Error Message ...'
 Write-StatusMessage -x -m 'Exception Message ...'
+Write-StatusMessage -v
 
 $env:PS_STATUSMESSAGE_LABELS     = $false
 $env:PS_STATUSMESSAGE_TIMESTAMPS = $false

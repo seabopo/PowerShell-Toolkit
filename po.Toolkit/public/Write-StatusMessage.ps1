@@ -1,8 +1,5 @@
 function Write-StatusMessage {
     <#
-    .SYNOPSIS
-        Writes a formatted status message to the console.
-
     .DESCRIPTION
         Writes a formatted status message to the console.
 
@@ -24,34 +21,22 @@ function Write-StatusMessage {
             $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
             $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Header","Process","Debug","Information"]'
 
-        By default, all messages are written using the Write-Host function. Writing to the other PowerShell
-        output streams can be enabled by setting the PS_STATUSMESSAGE_USE_ALL_OUTPUT_STREAMS environment variable
-        to true. The message types and associated streams are show in the table below.
+        All messages are written using the Write-Host PowerShell function as that is the only function 
+        that supports color-coding of messages.
 
-            Type          Msg Color    Msg Header   Verbose  PS Write Function
-            ------------  -----------  -----------  -------  -----------------
-            Header        Magenta      -none-       Yes      Write-Verbose
-            Process       Cyan         -none-       Yes      Write-Verbose
-            Action        White        -none-       No       Write-host
-            Information   DarkGray     -none-       Yes      Write-Verbose
-            Debug         DarkGray     DEBUG        Yes      Write-Debug
-            Success       DarkGreen    SUCCESS      No       Write-host
-            Warning       DarkYellow   WARNING      No       Write-Warning
-            Failure       DarkRed      FAILURE      No       Write-Error
-            Error         Red          ERROR        No       Write-Error
-            Exception     Red          EXCEPTION    No       Write-Error
-
-            PowerShell Write-Functions:
-                Write-Host     :: Write-Host streams are always written.
-                Write-Output   :: not used for display by this function.
-                Write-Warning  :: Controlled by $WarningPreference.
-                Write-Error    :: Controlled by
-                Write-Debug    :: Controlled by $DebugPreference: SilentlyContinue (hidden) or Continue (shown).
-                Write-Verbose  :: Controlled by $VerbosePreference: SilentlyContinue (hidden) or Continue (shown).
-
-                The Write-Functions use the standard user preference variables values to determine if the message
-                should be displayed. Setting the preference to SilentlyContinue will hide the messages and
-                setting the preference to Continue will show the messages.
+            Type             Msg Color    Msg Header   Verbose 
+            ---------------  -----------  -----------  ------- 
+            Header           Magenta      -none-       Yes     
+            Process          Cyan         -none-       Yes     
+            Action           White        -none-       No      
+            Information      DarkGray     -none-       Yes     
+            Debug            DarkGray     DEBUG        Yes     
+            Success          DarkGreen    SUCCESS      No      
+            Warning          DarkYellow   WARNING      No      
+            Failure          DarkRed      FAILURE      No      
+            Error            Red          ERROR        No      
+            Exception        Red          EXCEPTION    No      
+            InvocationSource Gray         -none-       No      
 
     .PARAMETER Header
         OPTIONAL. Switch. Alias: -h. Switch alternative for the Header Type parameter. Message Color: Magenta.
@@ -97,6 +82,10 @@ function Write-StatusMessage {
         OPTIONAL. Switch. Alias: -x. Switch alternative for the Exception Type parameter. Message Color: Red.
         Assigning the Error object to the MessageObject parameter for this type of message will automatically
         generate an exception message based on the error details and append it to the message parameter.
+
+    .PARAMETER InvocationSource
+        OPTIONAL. Switch. Alias: -v. Switch alternative for the InvocationSource Type parameter. Message Color: Gray.
+        Sets the message to the source of the callstack that called the parent function.
 
     .PARAMETER TimeStamps
         OPTIONAL. Switch. Alias: -ts. Prefixes each message with a timestamp in the format" 'yyyy-MM-dd HH:mm:ss'.
@@ -194,7 +183,7 @@ function Write-StatusMessage {
         [Alias('m')]  [string]         $Message,
 
         [Parameter(ParameterSetName = "byTypeName")]
-        [ValidateSet('Header','Process','Action','Information','Debug','Success','Warning','Failure','Error','Exception')]
+        [ValidateSet('Header','Process','Action','Information','Debug','Success','Warning','Failure','Error','Exception','InvocationSource')]
         [Alias('t')]  [String]         $Type,
 
         [Parameter(ParameterSetName = "Header")]
@@ -227,6 +216,9 @@ function Write-StatusMessage {
         [Parameter(ParameterSetName = "Exception")]
         [Alias('x')]  [Switch]         $Exception,
 
+        [Parameter(ParameterSetName = "InvocationSource")]
+        [Alias('v')]  [Switch]         $InvocationSource,
+
         [Alias('ts')] [Switch]         $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
         [Alias('l')]  [Switch]         $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
 
@@ -253,46 +245,53 @@ function Write-StatusMessage {
 
         try {
 
-            $messageObject = [Hashtable]@{
-                Message             = $Message
-                Type                = [string]::IsNullOrEmpty($Type) ? $PSCmdlet.ParameterSetName : $Type
-                TimeStamps          = $TimeStamps.ToBool()
-                Labels              = $Labels.ToBool()
-                LabelTypes          = $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES | ConvertFrom-JSON
-                IndentationLevel    = $IndentationLevel
-                IndentationString   = $IndentationString
-                Banner              = $Banner.ToBool()
-                DoubleBanner        = $DoubleBanner.ToBool()
-                BannerString        = $BannerString
-                BannerLength        = $BannerLength
-                ColorBanners        = $ColorBanners.ToBool()
-                DoubleSpace         = $DoubleSpace.ToBool()
-                PreSpace            = $PreSpace.ToBool()
-                DebugObject         = $Object
-                MaxRecursionDepth   = $MaxRecursionDepth
-                MessagePrefix       = $null
-                MessageBanners      = $null
-                DebugObjectPrefix   = $null
-                VerboseMessageTypes = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
-                WriteVerboseTypes   = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
-                InvocationSource    = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
-            }
+            $MessageType         = [string]::IsNullOrEmpty($Type) ? $PSCmdlet.ParameterSetName : $Type
+            $VerboseMessageTypes = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
+            $WriteVerboseTypes   = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
 
-            $messageObject |
-                Test-MessageTypeShouldBeWritten |
-                Set-AutoGeneratedExceptionMessage |
-                Set-StatusMessageColor |
-                Set-StatusMessagePrefix |
-                Set-StatusMessageBanners |
-                Write-StatusMessageToConsole |
-                Out-Null
+            if ( $MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false ) {
+                # This message should not be written to the console.
+            }
+            else {
+
+                $messageObject = [Hashtable]@{
+                    Message             = $Message
+                    Type                = $MessageType
+                    TimeStamps          = $TimeStamps.ToBool()
+                    Labels              = $Labels.ToBool()
+                    LabelTypes          = $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES | ConvertFrom-JSON
+                    IndentationLevel    = $IndentationLevel
+                    IndentationString   = $IndentationString
+                    Banner              = $Banner.ToBool()
+                    DoubleBanner        = $DoubleBanner.ToBool()
+                    BannerString        = $BannerString
+                    BannerLength        = $BannerLength
+                    ColorBanners        = $ColorBanners.ToBool()
+                    DoubleSpace         = $DoubleSpace.ToBool()
+                    PreSpace            = $PreSpace.ToBool()
+                    DebugObject         = $Object
+                    MaxRecursionDepth   = $MaxRecursionDepth
+                    MessagePrefix       = $null
+                    MessageBanners      = $null
+                    DebugObjectPrefix   = $null
+                    InvocationSource    = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Location'
+                }
+
+                $messageObject |
+                    Set-AutoGeneratedInvocationMessage |
+                    Set-AutoGeneratedExceptionMessage |
+                    Set-StatusMessageColor |
+                    Set-StatusMessagePrefix |
+                    Set-StatusMessageBanners |
+                    Write-StatusMessageToConsole |
+                    Out-Null
+
+            }
 
         }
         catch {
 
-            if ($_.Exception.Message -ne "MessageTypeShouldNotBeWritten") {
-                Write-ExceptionMessage -e $_
-            }
+            Write-ExceptionMessage -e $_
 
         }
         finally {
