@@ -1,9 +1,5 @@
 Function Initialize-PipelineObject {
     <#
-    .SYNOPSIS
-        Creates a Hashtable (or appends to a passed Hashtable) a set of key/value pairs based on the parameters
-        and invocation data of the calling function.
-
     .DESCRIPTION
         Creates a Hashtable (or appends to a passed Hashtable) a set of key/value pairs based on the parameters
         and invocation data of the calling function.
@@ -98,7 +94,6 @@ Function Initialize-PipelineObject {
                     ...
                 }
             }
-
     #>
     [CmdletBinding()]
     [OutputType([hashtable])]
@@ -146,5 +141,3 @@ Function Initialize-PipelineObject {
 
     }
 }
-
-
