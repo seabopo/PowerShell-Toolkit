@@ -23,9 +23,18 @@ Set-Variable -Scope 'Local' -Name "PS_MODULE_NAME" -Value $($PSScriptRoot | Spli
 # The Following set of environment variables are REQUIRED for the module to function.
 
 # Initialize the user-definable "verbose" message types. Select from the following list:
-# Header, Process, Action, Information, Debug, Success, Warning, Failure, Error, Exception and InvocationSource.
+# Header, Process, Action, Information, Debug, Success, Warning, Failure, Error, Exception, 
+# InvocationSource, FunctionCall.
 if ( $null -eq $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES ) {
-    $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Header","Process","Debug","Information","InvocationSource"]'
+    $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Header","Process","Debug","Information","InvocationSource","FunctionCall"]'
+}
+
+# Initialize the user-definable "ignore" message types. Select from the following list:
+# Header, Process, Action, Information, Debug, Success, Warning, Failure, Error, Exception, 
+# InvocationSource, FunctionCall.
+# These messages will always be ignored and not be logged.
+if ( $null -eq $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES ) {
+    $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES = '[]'
 }
 
 # Initialize prefix labels. The default behavior is to not show labels, but to use colors instead.

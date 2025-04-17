@@ -11,12 +11,13 @@ function Write-StatusMessage {
 
         The type determines several properties of the output, including the color, label and when the messages
         are suppressed. The type of message can also be set using the following switches: -Header, -Process,
-        -Action, -Information, Dbg, -Success, -Warning, -Failure, -Err -ExceptionError
+        -Action, -Information, Dbg, -Success, -Warning, -Failure, -Err -ExceptionError, -InvocationSource,
+        -FunctionCall.
 
-        Message types of Header, Process, Information, and Debug are by default considered verbose and are only
-        shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES is set to true. This list can be modified by updating
-        the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES environment variable. The value of this variable should be a
-        JSON array of strings since environment variables can only store strings.
+        Message types of Header, Process, Information, Debug, InvocationSource and FunctionCall are by default 
+        considered verbose and are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES is set to true. 
+        This list can be modified by updating the PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES environment variable. 
+        The value of this variable must be a JSON array of strings as environment variables can only store strings.
         Examples:
             $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
             $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Header","Process","Debug","Information"]'
@@ -37,6 +38,10 @@ function Write-StatusMessage {
             Error            Red          ERROR        No      
             Exception        Red          EXCEPTION    No      
             InvocationSource Gray         -none-       No      
+
+        Note: Specific types of messages can be ignored by setting the PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES
+              environment variable. The value of this variable must be a JSON array of strings
+              Example: $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES  = '["InvocationSource","FunctionCall"]'
 
     .PARAMETER Header
         OPTIONAL. Switch. Alias: -h. Switch alternative for the Header Type parameter. Message Color: Magenta.
@@ -257,10 +262,12 @@ function Write-StatusMessage {
         try {
 
             $MessageType         = [string]::IsNullOrEmpty($Type) ? $PSCmdlet.ParameterSetName : $Type
+            $IgnoreMessageTypes  = $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES | ConvertFrom-JSON
             $VerboseMessageTypes = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
             $WriteVerboseTypes   = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
 
-            if ( $MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false ) {
+            if ( ($MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false) -or 
+                 ($MessageType -in $IgnoreMessageTypes) ) {
                 # This message should not be written to the console.
             }
             else {

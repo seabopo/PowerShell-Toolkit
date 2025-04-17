@@ -20,6 +20,7 @@ Import-Module '../po.Toolkit/' -Force
 # Set these control variables to determine the categories of certain functions
 
 # Determine which types of messages should be considered "verbose", and decide whether or not to show them.
+  $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES  = '[]'
   $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Debug","Information"]'
   $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
 
