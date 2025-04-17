@@ -293,8 +293,19 @@ Write-Msg -d -il 3 -ds -m 'Debug Object: ' -o $complexObject -MaxRecursionDepth 
 
 Write-Msg -p -m " Auto-Generated Function Call Examples" -b -ps
 
-function Invoke-FunctionCall1 { Write-Msg -c }
+function Invoke-FunctionCall1 {
+    Write-Msg -FunctionCall 
+}
 Invoke-FunctionCall1
+
+function Invoke-FunctionCall2 {
+    param(   
+        [Parameter()] [String] $TestParam1,
+        [Parameter()] [String] $TestParam2
+    )
+    Write-Msg -FunctionCall -IncludeParameters 
+}
+Invoke-FunctionCall2 -TestParam1 'Test Value 1' -TestParam2 'Test Value 2'
 
 
 #==================================================================================================================

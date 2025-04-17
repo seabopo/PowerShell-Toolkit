@@ -99,6 +99,10 @@ function Write-StatusMessage {
         Writes four messages logging the function name (Process Type), the function file (debug type), the
         invocation source (debut type) and the invocation file (debut type).
 
+    .PARAMETER IncludeParameters
+        OPTIONAL. Switch. Alias: -ip. If the message type is 'FunctionCall' this parameter will also log
+        the parameters that were bound to the function call.
+
     .PARAMETER TimeStamps
         OPTIONAL. Switch. Alias: -ts. Prefixes each message with a timestamp in the format" 'yyyy-MM-dd HH:mm:ss'.
         This value can be set using an environment variable.
@@ -234,6 +238,7 @@ function Write-StatusMessage {
 
         [Parameter(ParameterSetName = "FunctionCall")]
         [Alias('c')]  [Switch]         $FunctionCall,
+        [Alias('ip')] [Switch]         $IncludeParameters,
 
         [Alias('ts')] [Switch]         $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
         [Alias('l')]  [Switch]         $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
@@ -267,36 +272,40 @@ function Write-StatusMessage {
             $WriteVerboseTypes   = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
 
             if ( ($MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false) -or 
-                 ($MessageType -in $IgnoreMessageTypes) ) {
+                 ($MessageType -in $IgnoreMessageTypes) ) 
+            {
                 # This message should not be written to the console.
             }
             else {
 
                 $messageObject = [Hashtable]@{
-                    Message             = $Message
-                    Type                = $MessageType
-                    TimeStamps          = $TimeStamps.ToBool()
-                    Labels              = $Labels.ToBool()
-                    LabelTypes          = $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES | ConvertFrom-JSON
-                    IndentationLevel    = $IndentationLevel
-                    IndentationString   = $IndentationString
-                    Banner              = $Banner.ToBool()
-                    DoubleBanner        = $DoubleBanner.ToBool()
-                    BannerString        = $BannerString
-                    BannerLength        = $BannerLength
-                    ColorBanners        = $ColorBanners.ToBool()
-                    DoubleSpace         = $DoubleSpace.ToBool()
-                    PreSpace            = $PreSpace.ToBool()
-                    DebugObject         = $Object
-                    MaxRecursionDepth   = $MaxRecursionDepth
-                    MessagePrefix       = $null
-                    MessageBanners      = $null
-                    DebugObjectPrefix   = $null
-                    InvocationSource    = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'Command'
-                    InvocationLine      = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'ScriptLineNumber'
-                    InvocationFile      = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'ScriptName'
-                    TargetFunctionName  = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
-                    TargetFunctionFile  = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'ScriptName'
+                    Message              = $Message
+                    Type                 = $MessageType
+                    IncludeParameters    = $IncludeParameters.ToBool()
+                    TimeStamps           = $TimeStamps.ToBool()
+                    Labels               = $Labels.ToBool()
+                    LabelTypes           = $env:PS_STATUSMESSAGE_LABEL_MESSAGE_TYPES | ConvertFrom-JSON
+                    IndentationLevel     = $IndentationLevel
+                    IndentationString    = $IndentationString
+                    Banner               = $Banner.ToBool()
+                    DoubleBanner         = $DoubleBanner.ToBool()
+                    BannerString         = $BannerString
+                    BannerLength         = $BannerLength
+                    ColorBanners         = $ColorBanners.ToBool()
+                    DoubleSpace          = $DoubleSpace.ToBool()
+                    PreSpace             = $PreSpace.ToBool()
+                    DebugObject          = $Object
+                    MaxRecursionDepth    = $MaxRecursionDepth
+                    MessagePrefix        = $null
+                    MessageBanners       = $null
+                    DebugObjectPrefix    = $null
+                    InvocationSource     = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'Command'
+                    InvocationLine       = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'ScriptLineNumber'
+                    InvocationFile       = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'ScriptName'
+                    TargetFunctionName   = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'Command'
+                    TargetFunctionFile   = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'ScriptName'
+                    TargetFunctionParams = Get-PSCallStack | Select-Object -Skip 1 -First 1 -ExpandProperty 'InvocationInfo' |
+                                                             Select-Object -ExpandProperty 'BoundParameters'
                 }
 
                 if ( $messageObject.Type -eq 'FunctionCall' ) {
