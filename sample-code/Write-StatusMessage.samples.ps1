@@ -15,8 +15,6 @@ Push-Location -Path $PSScriptRoot
 
 $ErrorActionPreference = "Stop"
 
-Import-Module '../po.Toolkit/' -Force
-
 # Set these control variables to determine the categories of certain functions
 
 # Determine which types of messages should be considered "verbose", and decide whether or not to show them.
@@ -36,6 +34,9 @@ Import-Module '../po.Toolkit/' -Force
   $env:PS_STATUSMESSAGE_COLOR_BANNERS       = $false
   $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10
   $env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS  = $false
+
+# Import the module to be tested.
+  Import-Module '../po.Toolkit/' -Force
 
 #==================================================================================================================
 # Run Status Message Tests
@@ -295,6 +296,7 @@ Write-Msg -p -m " Auto-Generated Function Call Examples" -b -ps
 
 function Invoke-FunctionCall1 {
     Write-Msg -FunctionCall 
+    Write-Msg -FunctionResult -Message "Test Message"
 }
 Invoke-FunctionCall1
 
@@ -303,7 +305,12 @@ function Invoke-FunctionCall2 {
         [Parameter()] [String] $TestParam1,
         [Parameter()] [String] $TestParam2
     )
+    $testParam3 = @{
+        TestParam3a = "Test Value 3a"
+        TestParam3b = "Test Value 3b"
+    }
     Write-Msg -FunctionCall -IncludeParameters 
+    Write-Msg -FunctionResult -Message "Test Message" -object $testParam3
 }
 Invoke-FunctionCall2 -TestParam1 'Test Value 1' -TestParam2 'Test Value 2'
 
