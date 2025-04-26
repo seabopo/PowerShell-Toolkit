@@ -43,7 +43,7 @@ function Invoke-HttpRequest {
 
     .PARAMETER UseBasicParsing
         OPTIONAL. Switch. Alias: -b. Use a basic, non-DOM parsing model for the content. This is more performant
-        but can make the results harder to parse since they are not in a DOM model.
+        but can make the results harder to parse.
 
     .PARAMETER Silent
         OPTIONAL. Switch. Alias: -l. Do not display and log events. This overrides the logging preferences set
