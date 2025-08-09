@@ -26,7 +26,7 @@ Set-Variable -Scope 'Local' -Name "PS_MODULE_NAME" -Value $($PSScriptRoot | Spli
 # Header, Process, Action, Information, Debug, Success, Warning, Failure, Error, Exception, 
 # InvocationSource, FunctionCall.
 if ( $null -eq $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES ) {
-    $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Header","Process","Debug","Information","InvocationSource","FunctionCall"]'
+    $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Header","Process","Debug","Information","InvocationSource","FunctionCall","FunctionResult"]'
 }
 
 # Initialize the user-definable "ignore" message types. Select from the following list:
