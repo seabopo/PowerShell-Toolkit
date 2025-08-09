@@ -10,9 +10,9 @@ function Write-StatusMessage {
         OPTIONAL. String. Alias: -t. The type of message to write. Default value: 'Action'.
 
         The type determines several properties of the output, including the color, label and when the messages
-        are suppressed. The type of message can also be set using the following switches: -Header, -Process,
-        -Action, -Information, Dbg, -Success, -Warning, -Failure, -Err -ExceptionError, -InvocationSource,
-        -FunctionCall.
+        are suppressed. The type of message can also be set using the following switches: 
+        -Header, -Process, -FunctionCall, -FunctionResult, -InvocationSource, 
+        -Action, -Information, -Dbg, -Success, -Warning, -Failure, -Err -ExceptionError
 
         Message types of Header, Process, Information, Debug, InvocationSource and FunctionCall are by default 
         considered verbose and are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES is set to true. 
@@ -29,15 +29,18 @@ function Write-StatusMessage {
             ---------------  -----------  -----------  ------- 
             Header           Magenta      -none-       Yes     
             Process          Cyan         -none-       Yes     
-            Action           White        -none-       No      
+            FunctionCall     Blue         -none-       Yes     
+            InvocationSource Gray         -none-       Yes     
+            FunctionResult   DarkBlue     -none-       Yes     
             Information      DarkGray     -none-       Yes     
             Debug            DarkGray     DEBUG        Yes     
+            Action           White        -none-       No      
             Success          DarkGreen    SUCCESS      No      
             Warning          DarkYellow   WARNING      No      
             Failure          DarkRed      FAILURE      No      
             Error            Red          ERROR        No      
             Exception        Red          EXCEPTION    No      
-            InvocationSource Gray         -none-       No      
+            
 
         Note: Specific types of messages can be ignored by setting the PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES
               environment variable. The value of this variable must be a JSON array of strings.
@@ -180,6 +183,10 @@ function Write-StatusMessage {
         This value can be set using an environment variable.
             Example: $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10
 
+    .PARAMETER ForceWrite
+        OPTIONAL. Switch. Alias: -fw. Forces the message to be written to the console even if the message type
+        would normally be suppressed because the message type is in the Verbose or Ignore lists.
+
     .EXAMPLE
         Write-StatusMessage -Type 'Header' -Message 'Starting Testing ...'
 
@@ -203,69 +210,72 @@ function Write-StatusMessage {
         [Alias('m')]  [string]         $Message,
 
         [Parameter(ParameterSetName = "byTypeName")]
-        [ValidateSet('Header','Process','Action','Information','Debug','Success','Warning','Failure','Error',
-                     'Exception','InvocationSource','FunctionCall','FunctionResult')]
+        [ValidateSet('Header','Process','Action','Information','Debug',
+                     'Success','Warning','Failure','Error','Exception',
+                     'InvocationSource','FunctionCall','FunctionResult')]
         [Alias('t')]  [String]         $Type,
 
         [Parameter(ParameterSetName = "Header")]
-        [Alias('h')]  [Switch]         $Header,
+        [Alias('h')]  [Switch]        $Header,
 
         [Parameter(ParameterSetName = "Process")]
-        [Alias('p')]  [Switch]         $Process,
+        [Alias('p')]  [Switch]        $Process,
 
         [Parameter(ParameterSetName = "Action")]
-        [Alias('a')]  [Switch]         $Action,
+        [Alias('a')]  [Switch]        $Action,
 
         [Parameter(ParameterSetName = "Information")]
-        [Alias('i')]  [Switch]         $Information,
+        [Alias('i')]  [Switch]        $Information,
 
         [Parameter(ParameterSetName = "Debug")]
-        [Alias('d')]  [Switch]         $Dbg,
+        [Alias('d')]  [Switch]        $Dbg,
 
         [Parameter(ParameterSetName = "Success")]
-        [Alias('s')]  [Switch]         $Success,
+        [Alias('s')]  [Switch]        $Success,
 
         [Parameter(ParameterSetName = "Warning")]
-        [Alias('w')]  [Switch]         $Warning,
+        [Alias('w')]  [Switch]        $Warning,
 
         [Parameter(ParameterSetName = "Failure")]
-        [Alias('f')]  [Switch]         $Failure,
+        [Alias('f')]  [Switch]        $Failure,
 
         [Parameter(ParameterSetName = "Error")]
-        [Alias('e')]  [Switch]         $Err,
+        [Alias('e')]  [Switch]        $Err,
 
         [Parameter(ParameterSetName = "Exception")]
-        [Alias('x')]  [Switch]         $Exception,
+        [Alias('x')]  [Switch]        $Exception,
 
         [Parameter(ParameterSetName = "InvocationSource")]
-        [Alias('v')]  [Switch]         $InvocationSource,
+        [Alias('v')]  [Switch]        $InvocationSource,
 
         [Parameter(ParameterSetName = "FunctionCall")]
-        [Alias('c')]  [Switch]         $FunctionCall,
-        [Alias('ip')] [Switch]         $IncludeParameters,
+        [Alias('c')]  [Switch]        $FunctionCall,
+        [Alias('ip')] [Switch]        $IncludeParameters,
 
         [Parameter(ParameterSetName = "FunctionResult")]
         [Alias('r')]  [Switch]        $FunctionResult,
         
-        [Alias('ts')] [Switch]         $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
-        [Alias('l')]  [Switch]         $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
+        [Alias('ts')] [Switch]        $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
+        [Alias('l')]  [Switch]        $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
 
-        [Alias('il')] [Int]            $IndentationLevel = 0,
-        [Alias('is')] [String]         $IndentationString = $env:PS_STATUSMESSAGE_INDENTATION_STRING,
+        [Alias('il')] [Int]           $IndentationLevel = 0,
+        [Alias('is')] [String]        $IndentationString = $env:PS_STATUSMESSAGE_INDENTATION_STRING,
 
-        [Alias('b')]  [Switch]         $Banner,
-        [Alias('bb')] [Switch]         $DoubleBanner,
-        [Alias('bs')] [String]         $BannerString = $env:PS_STATUSMESSAGE_BANNER_STRING,
-        [Alias('bl')] [Int]            $BannerLength = [System.Convert]::ToInt32($env:PS_STATUSMESSAGE_BANNER_LENGTH),
-        [Alias('cb')] [Switch]         $ColorBanners = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_COLOR_BANNERS),
+        [Alias('b')]  [Switch]        $Banner,
+        [Alias('bb')] [Switch]        $DoubleBanner,
+        [Alias('bs')] [String]        $BannerString = $env:PS_STATUSMESSAGE_BANNER_STRING,
+        [Alias('bl')] [Int]           $BannerLength = [System.Convert]::ToInt32($env:PS_STATUSMESSAGE_BANNER_LENGTH),
+        [Alias('cb')] [Switch]        $ColorBanners = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_COLOR_BANNERS),
 
-        [Alias('rx')] [Switch]         $RethrowException = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS),
+        [Alias('rx')] [Switch]        $RethrowException = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS),
 
-        [Alias('ds')] [Switch]         $DoubleSpace,
-        [Alias('ps')] [Switch]         $PreSpace,
+        [Alias('ds')] [Switch]        $DoubleSpace,
+        [Alias('ps')] [Switch]        $PreSpace,
 
-        [Alias('o')]                   $Object,
-        [Alias('rd')] [Int]            $MaxRecursionDepth = 3
+        [Alias('o')]                  $Object,
+        [Alias('rd')] [Int]           $MaxRecursionDepth = 3,
+
+        [Alias('fw')] [Switch]        $ForceWrite
 
     )
 
@@ -278,8 +288,8 @@ function Write-StatusMessage {
             $VerboseMessageTypes = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
             $WriteVerboseTypes   = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
 
-            if ( ($MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false) -or 
-                 ($MessageType -in $IgnoreMessageTypes) ) 
+            if ( ($MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false -and $ForceWrite -eq $false) -or 
+                 ($MessageType -in $IgnoreMessageTypes -and $ForceWrite -eq $false) ) 
             {
                 # This message should not be written to the console.
             }

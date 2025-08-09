@@ -296,24 +296,51 @@ Write-Msg -p -m " Auto-Generated Function Call Examples" -b -ps
 
 function Invoke-FunctionCall1 {
     Write-Msg -FunctionCall 
-    Write-Msg -FunctionResult -Message "Test Message"
+    Write-Msg -FunctionResult -Message "Invoke-FunctionCall1 Test Message"
 }
 Invoke-FunctionCall1
 
 function Invoke-FunctionCall2 {
     param(   
         [Parameter()] [String] $TestParam1,
-        [Parameter()] [String] $TestParam2
+        [Parameter()] [String] $TestParam2,
+        [Parameter()] [Switch] $ForceWrite
     )
     $testParam3 = @{
         TestParam3a = "Test Value 3a"
         TestParam3b = "Test Value 3b"
     }
-    Write-Msg -FunctionCall -IncludeParameters 
-    Write-Msg -FunctionResult -Message "Test Message" -object $testParam3
+    Write-Msg -FunctionCall -IncludeParameters -ForceWrite:$ForceWrite
+    Write-Msg -FunctionResult -Message "Invoke-FunctionCall2 Result Message" -object $testParam3 -ForceWrite:$ForceWrite
 }
 Invoke-FunctionCall2 -TestParam1 'Test Value 1' -TestParam2 'Test Value 2'
 
+Write-Msg -p -m " Auto-Generated Function Call Examples with Verbose Messages Disabled" -b -ps
+$env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Process","Debug","Information"]'
+$env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $false
+Invoke-FunctionCall2 -TestParam1 'Test Value 1' -TestParam2 'Test Value 2'
+
+Write-Msg -p -m " Auto-Generated Function Call Examples with Function Messages as Verbose" -b -ps -fw
+Write-Msg -i -m " ... no messages should be written ..." -ps -fw
+$env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Process","Debug","Information","FunctionCall","FunctionResult"]'
+$env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $false
+Invoke-FunctionCall2 -TestParam1 'Test Value 1' -TestParam2 'Test Value 2'
+
+Write-Msg -p -m " Auto-Generated Function Call Examples with Function Messages as Ignored" -b -ps -fw
+Write-Msg -i -m " ... no messages should be written ..." -ps -fw
+$env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES  = '["FunctionCall","FunctionResult"]'
+$env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Process","Debug","Information"]'
+$env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $false
+Invoke-FunctionCall2 -TestParam1 'Test Value 1' -TestParam2 'Test Value 2'
+
+
+Write-Msg -p -m " Auto-Generated Function Call Examples with Function Messages Ignored but Forced" -b -ps -fw
+$env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES  = '["FunctionCall","FunctionResult"]'
+$env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES = '["Process","Debug","Information"]'
+$env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $false
+Invoke-FunctionCall2 -TestParam1 'Test Value 1' -TestParam2 'Test Value 2' -ForceWrite
+
+$env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
 
 #==================================================================================================================
 # Run Exception Error Tests
@@ -360,3 +387,24 @@ function Invoke-ErrorTest3 {
 
 }
 Invoke-ErrorTest3
+
+
+Write-Host "Testing Color: Red"         -ForegroundColor Red
+Write-Host "Testing Color: DarkRed"     -ForegroundColor DarkRed
+Write-Host "Testing Color: Yellow"      -ForegroundColor Yellow
+Write-Host "Testing Color: DarkYellow"  -ForegroundColor DarkYellow
+Write-Host "Testing Color: Green"       -ForegroundColor Green
+Write-Host "Testing Color: DarkGreen"   -ForegroundColor DarkGreen
+Write-Host "Testing Color: Cyan"        -ForegroundColor Cyan
+Write-Host "Testing Color: DarkCyan"    -ForegroundColor DarkCyan
+Write-Host "Testing Color: Blue"        -ForegroundColor Blue
+Write-Host "Testing Color: DarkBlue"    -ForegroundColor DarkBlue
+Write-Host "Testing Color: Magenta"     -ForegroundColor Magenta
+Write-Host "Testing Color: DarkMagenta" -ForegroundColor DarkMagenta
+Write-Host "Testing Color: Gray"        -ForegroundColor Gray
+Write-Host "Testing Color: DarkGray"    -ForegroundColor DarkGray
+Write-Host "Testing Color: White"       -ForegroundColor White
+
+
+
+
