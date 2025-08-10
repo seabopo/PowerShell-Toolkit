@@ -11,20 +11,29 @@ function Set-StatusMessageColor {
 
         try {
 
-            $MessageObject.MessageColor = switch ( $MessageObject.Type )
-                                        {
-                                            "Header"           { "Magenta"    ; break }
-                                            "Process"          { "Cyan"       ; break }
-                                            "Action"           { "Gray"       ; break }
-                                            "Information"      { "DarkGray"   ; break }
-                                            "Debug"            { "DarkGray"   ; break }
-                                            "Success"          { "DarkGreen"  ; break }
-                                            "Warning"          { "DarkYellow" ; break }
-                                            "Failure"          { "DarkRed"    ; break }
-                                            "Error"            { "Red"        ; break }
-                                            "Exception"        { "Red"        ; break }
-                                            "InvocationSource" { "DarkGray"   ; break }
-                                            default            { "Gray"       ; break }
+            try {
+                $test = [System.Convert]::ToBoolean($MessageObject.TypeTestResult)
+            } catch [FormatException] {
+                $test = $false
+            }
+
+            $MessageObject.MessageColor = switch ( $MessageObject.Type ) {
+                                              "SuccessOrFailure" { $test ? "DarkGreen" : "DarkRed"    ; break }
+                                              "SuccessOrWarning" { $test ? "DarkGreen" : "DarkYellow" ; break }
+                                              "ActionOrFailure"  { $test ? "Gray"      : "DarkRed"    ; break }
+                                              "ActionOrWarning"  { $test ? "Gray"      : "DarkYellow" ; break }
+                                              "Header"           { "Magenta"                          ; break }
+                                              "Process"          { "Cyan"                             ; break }
+                                              "Action"           { "Gray"                             ; break }
+                                              "Information"      { "DarkGray"                         ; break }
+                                              "Debug"            { "DarkGray"                         ; break }
+                                              "Success"          { "DarkGreen"                        ; break }
+                                              "Warning"          { "DarkYellow"                       ; break }
+                                              "Failure"          { "DarkRed"                          ; break }
+                                              "Error"            { "Red"                              ; break }
+                                              "Exception"        { "Red"                              ; break }
+                                              "InvocationSource" { "DarkGray"                         ; break }
+                                              default            { "Gray"                             ; break }
                                         }
 
             Write-Output $MessageObject

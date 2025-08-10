@@ -39,6 +39,92 @@ $ErrorActionPreference = "Stop"
   Import-Module '../po.Toolkit/' -Force
 
 #==================================================================================================================
+# Test Objects and Functions
+#==================================================================================================================
+
+[String]    $testString = "Test String"
+[Int]       $testInt    = 123
+[Bool]      $testBool   = $true
+[String[]]  $testArray  = @("Test Array Item 1", "Test Array Item 2")
+
+[Object]    $testObject = New-Object -TypeName PSObject -Property @{
+                              PropertyName1 = "Property Value 1"
+                              PropertyName2 = "Property Value 2"
+                          }
+
+[HashTable] $testHashTable = @{
+                                PropertyName1 = "Property Value 1"
+                                PropertyName2 = "Property Value 2"
+                              }
+
+$complexObject = @{
+
+    Movies = @(
+        @{
+            Title = 'Movie 1'
+            Year = 2021
+            Genres = @('Action','Adventure','Sci-Fi')
+            Actors = @(
+                @{ Actor = 'Actor 1'; Role = 'Role 1' }
+                @{ Actor = 'Actor 2'; Role = 'Role 2' }
+            )
+        },
+        @{
+            Title = 'Movie 2'
+            Year = 2021
+            Genres = @('Action','Adventure','Fantasy')
+            Actors = @(
+                @{ Actor = 'Actor 1'; Role = 'Role 1' }
+                @{ Actor = 'Actor 2'; Role = 'Role 2' }
+                @{ Actor = 'Actor 3'; Role = 'Role 3' }
+            )
+        }
+    )
+}
+
+function Invoke-FunctionCall1 {
+    Write-Msg -FunctionCall 
+    Write-Msg -FunctionResult -Message "Invoke-FunctionCall1 Test Message"
+}
+
+function Invoke-FunctionCall2 {
+    param(   
+        [Parameter()] [String] $TestParam1,
+        [Parameter()] [String] $TestParam2,
+        [Parameter()] [Switch] $ForceWrite
+    )
+    $testParam3 = @{
+        TestParam3a = "Test Value 3a"
+        TestParam3b = "Test Value 3b"
+    }
+    Write-Msg -FunctionCall -IncludeParameters -ForceWrite:$ForceWrite
+    Write-Msg -FunctionResult -Message "Invoke-FunctionCall2 Result Message" -object $testParam3 -ForceWrite:$ForceWrite
+}
+
+#==================================================================================================================
+# Examples
+#==================================================================================================================
+
+Write-Msg -Header -Message " Examples" -DoubleBanner -ColorBanners -PreSpace
+
+Write-Msg -Process -Message " Process #1" -Banner -DoubleSpace -PreSpace
+Write-Msg -Action -Message 'Process Step 1' -TimeStamps
+Write-Msg -Action -IndentationLevel 1 -Message 'Sub-Step 1' -TimeStamps
+Write-Msg -Dbg    -IndentationLevel 2 -Message 'Debug Sub-Step 1 ' -TimeStamps -Object $testArray
+Write-Msg -SuccessOrFailure -Message "SuccessOrFailure: This is a Success Message" -Labels -TimeStamps -TypeTestResult $true
+
+Write-Msg -p         -m " Process #2" -b -ds -ps
+Write-Msg -a         -m 'Process Step 2'
+Write-Msg -a -il 1   -m 'Sub-Step 2'
+Write-Msg -d -il 2   -m 'Debug Sub-Step 2 ' -o $testHashTable
+Write-Msg -aow -il 1 -m "ActionOrWarning: This is a Success Message" -ttr $true
+
+Write-Msg -p         -m " Process #3" -b -ps -ds
+Write-Msg -a         -m 'Calling a function ...'
+Invoke-FunctionCall2
+Write-Msg -aow -ps -m "ActionOrWarning: This is a Warning Message" -ttr $false
+
+#==================================================================================================================
 # Run Status Message Tests
 #==================================================================================================================
 
@@ -203,110 +289,6 @@ $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
 
 Write-StatusMessage -Type 'Header' -Message " Debug Object Examples" -DoubleBanner -ColorBanners -PreSpace
 
-[String]    $testString = "Test String"
-[Int]       $testInt    = 123
-[Bool]      $testBool   = $true
-[String[]]  $testArray  = @("Test Array Item 1", "Test Array Item 2", "Test Array Item 3")
-
-[Object]    $testObject = New-Object -TypeName PSObject -Property @{
-                              PropertyName1 = "Property Value 1"
-                              PropertyName2 = "Property Value 2"
-                          }
-
-[HashTable] $testHashTable = @{
-                                PropertyName1 = "Property Value 1"
-                                PropertyName2 = "Property Value 2"
-                              }
-
-$complexObject = @{
-
-    Movies = @(
-        @{
-            Title = 'Movie 1'
-            Year = 2021
-            Genres = @('Action','Adventure','Sci-Fi')
-            Actors = @(
-                @{ Actor = 'Actor 1'; Role = 'Role 1' }
-                @{ Actor = 'Actor 2'; Role = 'Role 2' }
-            )
-        },
-        @{
-            Title = 'Movie 2'
-            Year = 2021
-            Genres = @('Action','Adventure','Fantasy')
-            Actors = @(
-                @{ Actor = 'Actor 1'; Role = 'Role 1' }
-                @{ Actor = 'Actor 2'; Role = 'Role 2' }
-                @{ Actor = 'Actor 3'; Role = 'Role 3' }
-            )
-        },
-        @{
-            Title = 'Movie 1'
-            Year = 2021
-            Genres = @('Action','Adventure','Western')
-            Actors = @(
-                @{ Actor = 'Actor 1'; Role = 'Role 1' }
-                @{ Actor = 'Actor 2'; Role = 'Role 2' }
-                @{ Actor = 'Actor 3'; Role = 'Role 3' }
-                @{ Actor = 'Actor 4'; Role = 'Role 4' }
-            )
-        }
-    )
-    TelevisionShows = @(
-        @{
-            Title = 'Show 1'
-            Year = 2021
-            Genres = @('Action','Adventure','Sci-Fi')
-            Actors = @(
-                @{ Actor = 'Actor 1'; Role = 'Role 1' }
-                @{ Actor = 'Actor 2'; Role = 'Role 2' }
-            )
-            Seasons = @(
-                @{
-                    Season = 1
-                    Episodes = @(
-                        @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
-                        @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
-                    )
-                },
-                @{
-                    Season = 2
-                    Episodes = @(
-                        @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
-                        @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
-                    )
-                }
-            )
-        },
-        @{
-            Title = 'Show 2'
-            Year = 2021
-            Genres = @('Action','Adventure','Fantasy')
-            Actors = @(
-                @{ Actor = 'Actor 1'; Role = 'Role 1' }
-                @{ Actor = 'Actor 2'; Role = 'Role 2' }
-                @{ Actor = 'Actor 3'; Role = 'Role 3' }
-            )
-            Seasons = @(
-                @{
-                    Season = 1
-                    Episodes = @(
-                        @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
-                        @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
-                    )
-                },
-                @{
-                    Season = 2
-                    Episodes = @(
-                        @{ Episode = 1; Title = 'Episode 1'; Description = 'Episode 1 Description' }
-                        @{ Episode = 2; Title = 'Episode 2'; Description = 'Episode 2 Description' }
-                    )
-                }
-            )
-        }
-    )
-}
-
 #-------------------------------------------------------------------------------
 # Test #D-1: Basic Debug Object Examples
 #-------------------------------------------------------------------------------
@@ -347,11 +329,17 @@ Write-StatusMessage -Type 'Header' -Message " Variable Type Parameter Tests" -Do
 
 Write-Msg -p -m " Test #V-1: Success or Failure Message Type" -b -ds -ps
 
+Write-Msg -SuccessOrFailure -Message "SuccessOrFailure: This is a Success Message" -TypeTestResult $true
+Write-Msg -SuccessOrFailure -Message "SuccessOrFailure: This is a Failure Message" -TypeTestResult $false
+
 #-------------------------------------------------------------------------------
 # Test #V-2: Success or Warning Message Type
 #-------------------------------------------------------------------------------
 
 Write-Msg -p -m " Test #V-2: Success or Warning Message Type" -b -ds -ps
+
+Write-Msg -SuccessOrWarning -Message "SuccessOrWarning: This is a Success Message" -TypeTestResult $true
+Write-Msg -SuccessOrWarning -Message "SuccessOrWarning: This is a Warning Message" -TypeTestResult $false
 
 #-------------------------------------------------------------------------------
 # Test #V-3: Action or Failure Message Type
@@ -359,11 +347,17 @@ Write-Msg -p -m " Test #V-2: Success or Warning Message Type" -b -ds -ps
 
 Write-Msg -p -m " Test #V-3: Action or Failure Message Type" -b -ds -ps
 
+Write-Msg -ActionOrFailure -Message "ActionOrFailure: This is an Action Message" -TypeTestResult $true
+Write-Msg -ActionOrFailure -Message "ActionOrFailure: This is a Failure Message" -TypeTestResult $false
+
 #-------------------------------------------------------------------------------
 # Test #V-4: Action or Warning Message Type
 #-------------------------------------------------------------------------------
 
 Write-Msg -p -m " Test #V-4: Action or Warning Message Type" -b -ds -ps
+
+Write-Msg -ActionOrWarning -Message "ActionOrWarning: This is an Action Message" -TypeTestResult $true
+Write-Msg -ActionOrWarning -Message "ActionOrWarning: This is a Warning Message" -TypeTestResult $false
 
 
 #==================================================================================================================

@@ -6,29 +6,17 @@ A Write-Host wrapper function that that bundles multiple debugging events into a
 
 Messages can:
  - Be colorized by type (Success, Warning Error, etc...)
+ - Be colorized by a test variable (SuccessOrFailure, SuccessOrWarning)
  - Be indented.
  - Be prefixed with a message type label.
  - Be prefixed with the date and time.
  - Be ignored/skipped by type via an environment variable.
  - Include pre or post spacing.
  - Include banners to easily distinguish between functional sections.
- - Include variables (complex objects are converted to JSON for debug logging).
- - Function-specific calls showing the Invocation, call parameters and returns.
+ - Write basic and complex variables (complex objects are converted to JSON for debug logging).
+ - Write function-specific calls showing invocation and return information.
 
-Examples:
-```
-Write-StatusMessage -Type 'Process' -Message "Process Message" -Banner -DoubleSpace -PreSpace
-  or
-Write-Msg -t 'Process' -m 'Process Message' -ba -ds -ps
-  or
-Write-Msg -p -m 'Message' -ba -ds -ps
-
-Write-StatusMessage -Type 'Debug' -Message 'Debug Message' -Labels -TimeStamps
-  or 
-Write-Msg -t 'Debug' -m 'Debug Message' -l -ts
-  or
-Write-Msg -d -m 'Debug Message' -l -ts
-```
+![Examples](image.png)
 
 See /sample-code/Write-StatusMessage.samples.ps1 for more examples.
 

@@ -12,7 +12,8 @@ function Write-StatusMessage {
         The type determines several properties of the output, including the color, label and when the messages
         are suppressed. The type of message can also be set using the following switches: 
         -Header, -Process, -FunctionCall, -FunctionResult, -InvocationSource, 
-        -Action, -Information, -Dbg, -Success, -Warning, -Failure, -Err -ExceptionError
+        -Action, -Information, -Dbg, -Success, -Warning, -Failure, -Err -ExceptionError,
+        -SuccessOrFailure, -SuccessOrWarning, -ActionOrFailure, -ActionOrWarning
 
         Message types of Header, Process, Information, Debug, InvocationSource and FunctionCall are by default 
         considered verbose and are only shown when the PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES is set to true. 
@@ -41,6 +42,9 @@ function Write-StatusMessage {
             Error            Red          ERROR        No      
             Exception        Red          EXCEPTION    No      
             
+
+        Note: The SuccessOrFailure, SuccessOrWarning, ActionOrFailure and ActionOrWarning message types determine
+              the final type based on the 
 
         Note: Specific types of messages can be ignored by setting the PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES
               environment variable. The value of this variable must be a JSON array of strings.
@@ -90,6 +94,31 @@ function Write-StatusMessage {
         OPTIONAL. Switch. Alias: -x. Switch alternative for the Exception Type parameter. Message Color: Red.
         Assigning the Error object to the MessageObject parameter for this type of message will automatically
         generate an exception message based on the error details and append it to the message parameter.
+
+    .PARAMETER SuccessOrFailure
+        OPTIONAL. Switch. Alias: -sof. Switch alternative for the SuccessOrFailure Type parameter. The message
+        color is determined by the value of the TypeTestResult parameter. If the TypeTestResult parameter is $true
+        the message type will be Success (Green), otherwise it will be Failure (Red).
+
+    .PARAMETER SuccessOrWarning
+        OPTIONAL. Switch. Alias: -sow. Switch alternative for the SuccessOrWarning Type parameter. The message
+        color is determined by the value of the TypeTestResult parameter. If the TypeTestResult parameter is $true
+        the message type will be Success (Green), otherwise it will be Warning (Yellow).
+
+    .PARAMETER ActionOrFailure
+        OPTIONAL. Switch. Alias: -aof. Switch alternative for the ActionOrFailure Type parameter. The message
+        color is determined by the value of the TypeTestResult parameter. If the TypeTestResult parameter is $true
+        the message type will beAction (White), otherwise it will be Failure (Red).
+
+    .PARAMETER ActionOrWarning
+        OPTIONAL. Switch. Alias: -aow. Switch alternative for the ActionOrWarning Type parameter. The message
+        color is determined by the value of the TypeTestResult parameter. If the TypeTestResult parameter is $true
+        the message type will be Action (White), otherwise it will be Warning (Yellow).
+
+    .PARAMETER TypeTestResult
+        OPTIONAL. Boolean. Alias: -ttr. A boolean value indicating the success or failure of a test. This value
+        will determine the message type when using the SuccessOrFailure, SuccessOrWarning, ActionOrFailure
+        or ActionOrWarning message types. The $true value will always result to the more successful message type.
 
     .PARAMETER InvocationSource
         OPTIONAL. Switch. Alias: -v. Switch alternative for the InvocationSource Type parameter. Message Color: Gray.
@@ -212,6 +241,7 @@ function Write-StatusMessage {
         [Parameter(ParameterSetName = "byTypeName")]
         [ValidateSet('Header','Process','Action','Information','Debug',
                      'Success','Warning','Failure','Error','Exception',
+                     'SuccessOrFailure','SuccessOrWarning','ActionOrFailure','ActionOrWarning',
                      'InvocationSource','FunctionCall','FunctionResult')]
         [Alias('t')]  [String]         $Type,
 
@@ -254,6 +284,20 @@ function Write-StatusMessage {
 
         [Parameter(ParameterSetName = "FunctionResult")]
         [Alias('r')]  [Switch]        $FunctionResult,
+
+        [Parameter(ParameterSetName = "SuccessOrFailure")]
+        [Alias('sof')]  [Switch]      $SuccessOrFailure,
+
+        [Parameter(ParameterSetName = "SuccessOrWarning")]
+        [Alias('sow')]  [Switch]      $SuccessOrWarning,
+
+        [Parameter(ParameterSetName = "ActionOrFailure")]
+        [Alias('aof')]  [Switch]      $ActionOrFailure,
+
+        [Parameter(ParameterSetName = "ActionOrWarning")]
+        [Alias('aow')]  [Switch]      $ActionOrWarning,
+
+        [Alias('ttr')]  [Boolean]      $TypeTestResult,
         
         [Alias('ts')] [Switch]        $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
         [Alias('l')]  [Switch]        $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
@@ -283,21 +327,28 @@ function Write-StatusMessage {
 
         try {
 
-            $MessageType         = [string]::IsNullOrEmpty($Type) ? $PSCmdlet.ParameterSetName : $Type
-            $IgnoreMessageTypes  = $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES | ConvertFrom-JSON
-            $VerboseMessageTypes = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
-            $WriteVerboseTypes   = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
+            $MessageType           = [string]::IsNullOrEmpty($Type) ? $PSCmdlet.ParameterSetName : $Type
+            $IgnoreMessageTypes    = $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES | ConvertFrom-JSON
+            $VerboseMessageTypes   = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
+            $WriteVerboseTypes     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
+            $VariableMessageTypes  = @('SuccessOrFailure','SuccessOrWarning','ActionOrFailure','ActionOrWarning')
 
             if ( ($MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false -and $ForceWrite -eq $false) -or 
                  ($MessageType -in $IgnoreMessageTypes -and $ForceWrite -eq $false) ) 
             {
                 # This message should not be written to the console.
             }
+            elseif ( $MessageType -in $VariableMessageTypes -and $null -eq $TypeTestResult ) {
+                $msg = "A boolean value must be provided for the TypeTestResult parameter when the " +
+                       "message type is SuccessOrFailure, SuccessOrWarning, ActionOrFailure or ActionOrWarning."
+                throw $msg
+            }
             else {
 
                 $messageObject = [Hashtable]@{
                     Message              = $Message
                     Type                 = $MessageType
+                    TypeTestResult       = $TypeTestResult
                     IncludeParameters    = $IncludeParameters.ToBool()
                     TimeStamps           = $TimeStamps.ToBool()
                     Labels               = $Labels.ToBool()
