@@ -2,7 +2,7 @@
 A PowerShell module of helper functions.
 
 ## Write-StatusMessage
-Writes formatted status messaged to the console. 
+A Write-Host wrapper function that that bundles multiple debugging events into a single call. 
 
 Messages can:
  - Be colorized by type (Success, Warning Error, etc...)
@@ -13,14 +13,15 @@ Messages can:
  - Include pre or post spacing.
  - Include banners to easily distinguish between functional sections.
  - Include variables (complex objects are converted to JSON for debug logging).
+ - Function-specific calls showing the Invocation, call parameters and returns.
 
 Examples:
 ```
-Write-StatusMessage -Type 'Process' -Message "Message" -Banner -DoubleSpace -PreSpace
+Write-StatusMessage -Type 'Process' -Message "Process Message" -Banner -DoubleSpace -PreSpace
   or
-Write-Msg -t 'Warning' -m 'Message' -ba -ds -ps
+Write-Msg -t 'Process' -m 'Process Message' -ba -ds -ps
   or
-Write-Msg -w -m 'Message' -ba -ds -ps 
+Write-Msg -p -m 'Message' -ba -ds -ps
 
 Write-StatusMessage -Type 'Debug' -Message 'Debug Message' -Labels -TimeStamps
   or 
