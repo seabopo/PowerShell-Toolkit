@@ -23,6 +23,8 @@ $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
 # Run Tests
 #==================================================================================================================
 
+Invoke-HttpRequest -u 'https://www.cloudflare.com'
+
 Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com'
 
 Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com' -p 'idontexist'

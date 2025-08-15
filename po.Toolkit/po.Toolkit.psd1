@@ -12,7 +12,7 @@
   RootModule = 'po.Toolkit.psm1'
 
 # Version number of this module.
-  ModuleVersion = '1.0.0'
+  ModuleVersion = '1.0.1'
 
 # Supported PSEditions
   CompatiblePSEditions = @('Core', 'Desktop')
@@ -30,7 +30,7 @@
   Copyright = 'MIT License'
 
 # Description of the functionality provided by this module
-  Description = 'Pipeline and console message utility functions.'
+  Description = 'A PowerShell module of helper functions primarily intended for use in larger workflows where many functions are called, lots of data is collected and verbose logging is required.'
 
 # Minimum version of the PowerShell engine required by this module
   PowerShellVersion = '7.3.0'
@@ -95,7 +95,7 @@
     PSData = @{
 
       # Tags applied to this module. These help with module discovery in online galleries.
-      # Tags = @()
+      Tags = @('Utility Functions','Logging','Debugging')
 
       # A URL to the license for this module.
         LicenseUri = 'https://github.com/seabopo/PowerShell-Toolkit/blob/main/LICENSE'
@@ -113,7 +113,7 @@
       # Prerelease = ''
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update/save
-      # RequireLicenseAcceptance = $false
+      RequireLicenseAcceptance = $false
 
       # External dependent modules of this module
       # ExternalModuleDependencies = @()

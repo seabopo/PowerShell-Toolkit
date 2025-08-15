@@ -20,6 +20,10 @@ function Invoke-HttpRequest {
            - startTime
            - duration
 
+    .PARAMETER URL
+        REQUIRED. String. Alias: -u. A complete URL, including the Protocol, Server and Path.
+        Examples: http://www.cloudflare.com/home
+
     .PARAMETER ServerName
         REQUIRED. String. Alias: -s. The server name or IP address to use for the request. This is the physical
         address that is used as part of the URL and used for DNS resolution.
@@ -58,12 +62,13 @@ function Invoke-HttpRequest {
     [OutputType([System.Collections.Specialized.OrderedDictionary])]
     [CmdletBinding()]
     param (
-        [Parameter(mandatory)]                     [String] [Alias('s')] $ServerName,
-        [Parameter()]                              [String] [Alias('h')] $HostName = $null,
-        [Parameter()]                              [String] [Alias('p')] $Path     = '/',
-        [Parameter()][ValidateSet("http","https")] [String] [Alias('o')] $Protocol = 'http',
-        [Parameter()]                              [Switch] [Alias('b')] $UseBasicParsing,
-        [Parameter()]                              [Switch] [Alias('l')] $Silent
+        [Parameter(ParameterSetName="URI", Mandatory)]                    [String] [Alias('u')] $Url,
+        [Parameter(ParameterSetName="PSHP",Mandatory)]                    [String] [Alias('s')] $ServerName,
+        [Parameter(ParameterSetName="PSHP")]                              [String] [Alias('h')] $HostName = $null,
+        [Parameter(ParameterSetName="PSHP")]                              [String] [Alias('p')] $Path     = '/',
+        [Parameter(ParameterSetName="PSHP")][ValidateSet("http","https")] [String] [Alias('o')] $Protocol = 'http',
+        [Parameter()]                                                     [Switch] [Alias('b')] $UseBasicParsing,
+        [Parameter()]                                                     [Switch] [Alias('l')] $Silent
     )
 
     process {
@@ -72,12 +77,10 @@ function Invoke-HttpRequest {
 
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-            if ( -not $Path.StartsWith('/') ) { $Path = '/' + $Path }
-
             $r = [ordered]@{
-                uri               = '{0}://{1}{2}' -f $Protocol, $ServerName, $Path
-                host              = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName)
-                requestHeaders    = @{ host = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName) }
+                uri               = $null
+                host              = $null
+                requestHeaders    = $null
                 success           = $true
                 statusCode        = $null
                 statusDescription = $null
@@ -91,12 +94,31 @@ function Invoke-HttpRequest {
                 duration          = $null
             }
 
+            if ( $PSCmdlet.ParameterSetName -eq 'PSHP' ) {
+                
+                if ( -not $Path.StartsWith('/') ) { $Path = '/' + $Path }
+                
+                $r.uri            = '{0}://{1}{2}' -f $Protocol, $ServerName, $Path
+                $r.host           = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName)
+                $r.requestHeaders = @{ host = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName) }
+
+            }
+            else {
+                $r.uri = $url
+            }
+
             if ( -not $Silent ) { Write-Msg -p -ps -m $( 'Getting results for URI: {0} ...' -f $r.uri ) }
 
             $r.startTime = Get-Date
 
             try {
-                $result = Invoke-WebRequest -Uri $r.uri -Headers $r.requestHeaders -UseBasicParsing:$UseBasicParsing
+                
+                if ( [String]::IsNullOrEmpty($r.requestHeaders) ) {
+                    $result = Invoke-WebRequest -Uri $r.uri -UseBasicParsing:$UseBasicParsing
+                } else {
+                    $result = Invoke-WebRequest -Uri $r.uri -Headers $r.requestHeaders -UseBasicParsing:$UseBasicParsing
+                }
+                
                 $r.value             = $result.Content
                 $r.responseHeaders   = $result.Headers
                 $r.links             = $result.Links
