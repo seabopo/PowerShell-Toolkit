@@ -1,8 +1,10 @@
 # PowerShellToolkit
-A PowerShell module of helper functions.
+A PowerShell module of helper functions. These functions are primarily intended for use in larger workflows
+where many functions are called, lots of data is collected and verbose logging is required.
 
 ## Write-StatusMessage
-A Write-Host wrapper function that that bundles multiple debugging events into a single call. 
+A Write-Host wrapper function that that bundles multiple debugging events into a single call, increasing log
+readability while decreasing the number of calls required.
 
 Messages can:
  - Be colorized by type (Success, Warning Error, etc...)
