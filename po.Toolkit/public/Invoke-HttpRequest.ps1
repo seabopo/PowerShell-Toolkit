@@ -61,8 +61,12 @@ function Invoke-HttpRequest {
         OPTIONAL. Switch. Alias: -j. Adds the "accept: application/json" header to type the result as JSON.
 
     .PARAMETER Silent
-        OPTIONAL. Switch. Alias: -l, -q, -quiet. Do not display and log events. This overrides the logging 
+        OPTIONAL. Switch. Alias: -l, -q, -quiet. Do not display or any log events. This overrides the logging 
         preferences set at the environment level.
+
+    .PARAMETER DebugMessagesOnly
+        OPTIONAL. Switch. Alias: -d. Sets the type of all success and error messages for any http result to the 
+        'debug' message type. This does not affect errors cause by events other than the HTTP request.
 
     .EXAMPLE
         Invoke-HttpRequest -o 'https' -h 'www.cloudflare.com'
@@ -99,7 +103,10 @@ function Invoke-HttpRequest {
         [Switch] [Alias('j')] $JSON,
         
         [Parameter()]
-        [Switch] [Alias('l','q','quiet')] $Silent
+        [Switch] [Alias('l','q','quiet')] $Silent,
+
+        [Parameter()]
+        [Switch] [Alias('d')] $DebugMessagesOnly
     )
 
     process {
@@ -182,8 +189,11 @@ function Invoke-HttpRequest {
             }
             
             if ( -not $Silent ) {
-                if ( $r.success ) {
+                if ( $DebugMessagesOnly ) {
                     Write-Msg -d -il 1 -m $r.message
+                }
+                elseif ( $r.success ) {
+                    Write-Msg -s -il 1 -m $r.message
                 }
                 else {
                     Write-Msg -e -il 1 -m $r.message
