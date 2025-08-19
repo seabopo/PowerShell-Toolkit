@@ -49,9 +49,20 @@ function Invoke-HttpRequest {
         OPTIONAL. Switch. Alias: -b. Use a basic, non-DOM parsing model for the content. This is more performant
         but can make the results harder to parse.
 
+        NOTE: This parameter has been deprecated. Beginning with PowerShell 6.0.0, all Web requests use basic 
+              parsing only. This parameter is included for backwards compatibility only and any use of it has 
+              no effect on the operation of the function.
+
+    .PARAMETER AuthorizationToken
+        OPTIONAL. String. Alias: -t. The authorization token to pass as part of the request. This will be used
+        by the "Authorization:" header as a bearer token. Example: "Authorization: Bearer <passed token>"
+
+    .PARAMETER JSON
+        OPTIONAL. Switch. Alias: -j. Adds the "accept: application/json" header to type the result as JSON.
+
     .PARAMETER Silent
-        OPTIONAL. Switch. Alias: -l. Do not display and log events. This overrides the logging preferences set
-        at the environment level.
+        OPTIONAL. Switch. Alias: -l, -q, -quiet. Do not display and log events. This overrides the logging 
+        preferences set at the environment level.
 
     .EXAMPLE
         Invoke-HttpRequest -o 'https' -h 'www.cloudflare.com'
@@ -62,13 +73,33 @@ function Invoke-HttpRequest {
     [OutputType([System.Collections.Specialized.OrderedDictionary])]
     [CmdletBinding()]
     param (
-        [Parameter(ParameterSetName="URI", Mandatory)]                    [String] [Alias('u')] $Url,
-        [Parameter(ParameterSetName="PSHP",Mandatory)]                    [String] [Alias('s')] $ServerName,
-        [Parameter(ParameterSetName="PSHP")]                              [String] [Alias('h')] $HostName = $null,
-        [Parameter(ParameterSetName="PSHP")]                              [String] [Alias('p')] $Path     = '/',
-        [Parameter(ParameterSetName="PSHP")][ValidateSet("http","https")] [String] [Alias('o')] $Protocol = 'http',
-        [Parameter()]                                                     [Switch] [Alias('b')] $UseBasicParsing,
-        [Parameter()]                                                     [Switch] [Alias('l')] $Silent
+        [Parameter(ParameterSetName="URI", Mandatory)]
+        [String] [Alias('u')] $Url,
+        
+        [Parameter(ParameterSetName="PSHP",Mandatory)]
+        [String] [Alias('s')] $ServerName,
+        
+        [Parameter(ParameterSetName="PSHP")]
+        [String] [Alias('h')] $HostName = $null,
+        
+        [Parameter(ParameterSetName="PSHP")]
+        [String] [Alias('p')] $Path = '/',
+        
+        [Parameter(ParameterSetName="PSHP")]
+        [ValidateSet("http","https")] 
+        [String] [Alias('o')] $Protocol = 'http',
+        
+        [Parameter()]
+        [Switch] [Alias('b')] $UseBasicParsing,
+
+        [Parameter()]
+        [String] [Alias('t')] $AuthorizationToken,
+
+        [Parameter()]
+        [Switch] [Alias('j')] $JSON,
+        
+        [Parameter()]
+        [Switch] [Alias('l','q','quiet')] $Silent
     )
 
     process {
@@ -76,6 +107,8 @@ function Invoke-HttpRequest {
         try {
 
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+            Write-Msg -FunctionCall -IncludeParameters
 
             $r = [ordered]@{
                 uri               = $null
@@ -107,6 +140,14 @@ function Invoke-HttpRequest {
                 $r.uri = $url
             }
 
+            if ( -not [String]::IsNullOrEmpty($AuthorizationToken) ) {
+                $r.requestHeaders += @{ Authorization = $('Bearer {0}' -f $AuthorizationToken) }
+            }
+
+            if ( $JSON ) {
+                $r.requestHeaders += @{ Accept = 'application/json' }
+            }
+
             if ( -not $Silent ) { Write-Msg -p -ps -m $( 'Getting results for URI: {0} ...' -f $r.uri ) }
 
             $r.startTime = Get-Date
@@ -114,11 +155,12 @@ function Invoke-HttpRequest {
             try {
                 
                 if ( [String]::IsNullOrEmpty($r.requestHeaders) ) {
-                    $result = Invoke-WebRequest -Uri $r.uri -UseBasicParsing:$UseBasicParsing
+                    $result = Invoke-WebRequest -Uri $r.uri
                 } else {
-                    $result = Invoke-WebRequest -Uri $r.uri -Headers $r.requestHeaders -UseBasicParsing:$UseBasicParsing
+                    $result = Invoke-WebRequest -Uri $r.uri -Headers $r.requestHeaders
                 }
-                
+
+                $r.duration          = [Math]::Round((New-TimeSpan -Start $r.startTime -End (Get-Date)).TotalSeconds,0).ToString()
                 $r.value             = $result.Content
                 $r.responseHeaders   = $result.Headers
                 $r.links             = $result.Links
@@ -126,22 +168,22 @@ function Invoke-HttpRequest {
                 $r.statusCode        = $result.StatusCode
                 $r.statusDescription = $result.StatusDescription
                 $r.responseUri       = $result.BaseResponse.RequestMessage.RequestUri.AbsoluteUri
-                $r.duration          = [Math]::Round((New-TimeSpan -Start $r.startTime -End (Get-Date)).TotalSeconds,0).ToString()
                 $r.message           = $( 'Result: HTTP {0} in {1} second(s) from {2}' -f
                                           $r.statusCode, $r.duration,$r.responseUri )
             }
             catch {
+                $r.duration          = [Math]::Round((New-TimeSpan -Start $r.startTime -End (Get-Date)).TotalSeconds,0).ToString()
                 $r.success           = $false
                 $r.message           = $_.Exception.Message
                 $r.statusCode        = $_.Exception.Response.StatusCode.value__
                 $r.statusDescription = $_.Exception.Response.ReasonPhrase
                 $r.responseUri       = $_.TargetObject.RequestUri.AbsoluteUri
-                $r.duration = [Math]::Round((New-TimeSpan -Start $r.startTime -End (Get-Date)).TotalSeconds,0).ToString()
+                
             }
-
+            
             if ( -not $Silent ) {
                 if ( $r.success ) {
-                    Write-Msg -s -il 1 -m $r.message
+                    Write-Msg -d -il 1 -m $r.message
                 }
                 else {
                     Write-Msg -e -il 1 -m $r.message

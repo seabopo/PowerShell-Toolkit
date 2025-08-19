@@ -23,15 +23,23 @@ $env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES = $true
 # Run Tests
 #==================================================================================================================
 
-Invoke-HttpRequest -u 'https://www.cloudflare.com'
+Write-Msg -h -ps -bb -m $( ' Invoke-HttpRequest Test Run - SUCCESSFUL Requests Expected' )
 
-Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com'
+  # Initialize the API Key / Bearer Token. api-token.ps1 contains a single line: return '<my api token>'
+    $env:CF_API_TOKEN = . '.\api-token.ps1'
 
-Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com' -p 'idontexist'
+  # Tests that should return a success result
+    Invoke-HttpRequest -u 'https://www.cloudflare.com'
+    Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com'
+    Invoke-HttpRequest -o 'https' -s 'github.com' -p '/seabopo'
+    Invoke-HttpRequest -o 'https' -s 'github.com' -p '/seabopo' -b
+    Invoke-HttpRequest -o 'https' -s 'github.com' -p '/seabopo' -b -l
+    Invoke-HttpRequest -u 'https://api.cloudflare.com/client/v4/user/tokens/verify' -t $env:CF_API_TOKEN
+    Invoke-HttpRequest -u 'https://api.cloudflare.com/client/v4/user/tokens/verify' -t $env:CF_API_TOKEN -j
 
-Invoke-HttpRequest -o 'https' -s 'github.com' -p '/seabopo'
+Write-Msg -h -ps -bb -m $( ' Invoke-HttpRequest Test Run - FAILED Requests Expected' )
 
-Invoke-HttpRequest -o 'https' -s 'github.com' -p '/seabopo' -b
+  # Tests that should return a success result
+    Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com' -p 'idontexist'
 
-write-host ''
-Invoke-HttpRequest -o 'https' -s 'github.com' -p '/seabopo' -b -l
+exit
