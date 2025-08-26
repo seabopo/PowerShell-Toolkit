@@ -52,12 +52,12 @@ Function ConvertTo-MessageString {
                 $returnValue = [System.Convert]::ToString($Object)
 
             }
-            elseif ( ( $typeName.EndsWith('[]') -and $typeName -ne 'Object[]' ) -or $typeName -eq 'ArrayList' ) {
+            # elseif ( ( $typeName.EndsWith('[]') -and $typeName -ne 'Object[]' ) -or $typeName -eq 'ArrayList' ) {
 
-                $multiLineReturnValue = $false
-                $returnValue = (($Object | ConvertTo-JSON -Depth 0 -Compress) 3> $null )
+            #     $multiLineReturnValue = $false
+            #     $returnValue = (($Object | ConvertTo-JSON -Depth 0 -Compress) 3> $null )
 
-            }
+            # }
             else {
 
                 $multiLineReturnValue = $true

@@ -1,5 +1,6 @@
 .DS_Store
 @scratch/*
+@publish/*
 scratch/*
 .vscode/settings.json
 sample-code/api-token.ps1
