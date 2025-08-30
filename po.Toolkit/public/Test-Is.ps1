@@ -75,10 +75,14 @@ Function Test-Is {
         }
 
         if ( $MyInvocation.InvocationName -in @('Test-IsNothing','IsNothing') ) {
+            $condition = "IsNothing"
             $result = -not $result
         }
+        else {
+            $condition = "IsSomething"
+        }
 
-        Write-Msg -FunctionResult -o $result
+        Write-Msg -FunctionResult -m $( 'Condition: {0}' -f $condition ) -o $( 'Result: {0}' -f $result ) #$result
 
         return $result
     }
