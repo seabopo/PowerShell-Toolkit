@@ -12,7 +12,7 @@
   RootModule = 'po.Toolkit.psm1'
 
 # Version number of this module.
-  ModuleVersion = '1.0.5'
+  ModuleVersion = '1.0.6'
 
 # Supported PSEditions
   CompatiblePSEditions = @('Core', 'Desktop')
@@ -69,7 +69,8 @@
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-  FunctionsToExport = @('Initialize-PipelineObject','Write-StatusMessage','Invoke-ConsoleCommand','Invoke-HttpRequest')
+  FunctionsToExport = @('Initialize-PipelineObject','Write-StatusMessage','Invoke-ConsoleCommand',
+                        'Invoke-HttpRequest','Test-Is')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 # CmdletsToExport = '*'
@@ -78,7 +79,8 @@
 # VariablesToExport = '*'
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-  AliasesToExport = @('Write-Status','Write-Message','Write-Msg','Invoke-Cmd')
+  AliasesToExport = @('Write-Status','Write-Message','Write-Msg','Invoke-Cmd',
+                      'Test-IsSomething','Test-IsNothing','IsSomething','IsNothing')
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()
