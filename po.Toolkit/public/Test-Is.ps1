@@ -51,6 +51,12 @@ Function Test-Is {
             if ( $typeName -eq 'String' -and '' -eq $value ) {
                 $result = $false
             }
+            elseif ( $typeName -eq 'SwitchParameter' -and $value.IsPresent -eq $true ) {
+                $result = $true
+            }
+            elseif ( $typeName -eq 'SwitchParameter' -and $value.IsPresent -eq $false  ) {
+                $result = $false
+            }
             else {
                 if ( $typeName -eq 'Object[]' ) {
                     try {
