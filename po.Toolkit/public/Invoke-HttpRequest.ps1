@@ -57,6 +57,9 @@ function Invoke-HttpRequest {
         OPTIONAL. String. Alias: -t. The authorization token to pass as part of the request. This will be used
         by the "Authorization:" header as a bearer token. Example: "Authorization: Bearer <passed token>"
 
+    .PARAMETER RequestHeaders
+        OPTIONAL. Hashtable. Alias: -r. A set of headers to use with the request.
+
     .PARAMETER JSON
         OPTIONAL. Switch. Alias: -j. Adds the "accept: application/json" header to type the result as JSON.
 
@@ -100,6 +103,9 @@ function Invoke-HttpRequest {
         [String] [Alias('t')] $AuthorizationToken,
 
         [Parameter()]
+        [Hashtable] [Alias('r')] $RequestHeaders,
+
+        [Parameter()]
         [Switch] [Alias('j')] $JSON,
         
         [Parameter()]
@@ -120,7 +126,7 @@ function Invoke-HttpRequest {
             $r = [ordered]@{
                 uri               = $null
                 host              = $null
-                requestHeaders    = $null
+                requestHeaders    = @{} #$null
                 success           = $true
                 statusCode        = $null
                 statusDescription = $null
@@ -138,9 +144,9 @@ function Invoke-HttpRequest {
                 
                 if ( -not $Path.StartsWith('/') ) { $Path = '/' + $Path }
                 
-                $r.uri            = '{0}://{1}{2}' -f $Protocol, $ServerName, $Path
-                $r.host           = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName)
-                $r.requestHeaders = @{ host = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName) }
+                $r.uri             = '{0}://{1}{2}' -f $Protocol, $ServerName, $Path
+                $r.host            = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName)
+                $r.requestHeaders += @{ host = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName) }
 
             }
             else {
@@ -153,6 +159,10 @@ function Invoke-HttpRequest {
 
             if ( $JSON ) {
                 $r.requestHeaders += @{ Accept = 'application/json' }
+            }
+
+            if ( $null -ne $RequestHeaders ) {
+                $r.requestHeaders += $RequestHeaders
             }
 
             if ( -not $Silent ) { Write-Msg -p -ps -m $( 'Getting results for URI: {0} ...' -f $r.uri ) }

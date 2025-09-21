@@ -36,6 +36,7 @@ Write-Msg -h -ps -bb -m $( ' Invoke-HttpRequest Test Run - SUCCESSFUL Requests E
     Invoke-HttpRequest -o 'https' -s 'github.com' -p '/seabopo' -b -l
     Invoke-HttpRequest -u 'https://api.cloudflare.com/client/v4/user/tokens/verify' -t $env:CF_API_TOKEN
     Invoke-HttpRequest -u 'https://api.cloudflare.com/client/v4/user/tokens/verify' -t $env:CF_API_TOKEN -j
+    Invoke-HttpRequest -u 'https://api.cloudflare.com/client/v4/user/tokens/verify' -t $env:CF_API_TOKEN -r @{ Accept = 'application/json' }
 
 Write-Msg -h -ps -bb -m $( ' Invoke-HttpRequest Test Run - FAILED Requests with Debug Messages Expected' )
 
