@@ -21,6 +21,9 @@ function Write-StatusMessageToConsole {
             if ( $null -eq $MessageObject.DebugObject ) {
 
                 $MessageObject.Message = $MessageObject.MessagePrefix + $MessageObject.Message
+                if ( $MessageObject.IncludeLastCall ) { 
+                     $MessageObject.Message = $MessageObject.Message + ' ' + $MessageObject.InvocationMessage
+                }
                 Write-Host $MessageObject.Message -ForegroundColor $MessageObject.MessageColor
 
             }

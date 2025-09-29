@@ -255,7 +255,7 @@ Write-StatusMessage -d -m 'Debug Message ...'
 Write-StatusMessage -s -m 'Success Message ...'
 Write-StatusMessage -w -m 'Warning Message ...'
 Write-StatusMessage -f -m 'Failure Message ...'
-Write-StatusMessage -e -m 'Error Message ...'
+Write-StatusMessage -e -m 'Error Message ...' -lc
 Write-StatusMessage -x -m 'Exception Message ...'
 Write-StatusMessage -v
 
@@ -276,7 +276,7 @@ Write-StatusMessage -d -m 'Debug Message ...'
 Write-StatusMessage -s -m 'Success Message ...'
 Write-StatusMessage -w -m 'Warning Message ...'
 Write-StatusMessage -f -m 'Failure Message ...'
-Write-StatusMessage -e -m 'Error Message ...'
+Write-StatusMessage -e -m 'Error Message ...' -lc
 Write-StatusMessage -x -m 'Exception Message ...'
 Write-StatusMessage -v
 

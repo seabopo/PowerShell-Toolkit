@@ -26,22 +26,21 @@ function Write-StatusMessage {
         All messages are written using the Write-Host PowerShell function as that is the only function 
         that supports color-coding of messages.
 
-            Type             Msg Color    Msg Header   Verbose 
-            ---------------  -----------  -----------  ------- 
-            Header           Magenta      -none-       Yes     
-            Process          Cyan         -none-       Yes     
-            FunctionCall     Blue         -none-       Yes     
-            InvocationSource Gray         -none-       Yes     
-            FunctionResult   DarkBlue     -none-       Yes     
-            Information      DarkGray     -none-       Yes     
-            Debug            DarkGray     DEBUG        Yes     
-            Action           White        -none-       No      
-            Success          DarkGreen    SUCCESS      No      
-            Warning          DarkYellow   WARNING      No      
-            Failure          DarkRed      FAILURE      No      
-            Error            Red          ERROR        No      
-            Exception        Red          EXCEPTION    No      
-            
+            Type                  Msg Color    Msg Header   Verbose 
+            --------------------  -----------  -----------  ------- 
+            Header                Magenta      -none-       Yes     
+            Process               Cyan         -none-       Yes     
+            FunctionCall          Blue         -none-       Yes     
+            InvocationSource      Gray         -none-       Yes     
+            FunctionResult        DarkBlue     -none-       Yes     
+            Information           DarkGray     -none-       Yes     
+            Debug                 DarkGray     DEBUG        Yes     
+            Action                White        -none-       No      
+            Success               DarkGreen    SUCCESS      No      
+            Warning               DarkYellow   WARNING      No      
+            Failure               DarkRed      FAILURE      No      
+            Err                   Red          ERROR        No      
+            Exception             Red          EXCEPTION    No      
 
         Note: The SuccessOrFailure, SuccessOrWarning, ActionOrFailure and ActionOrWarning message types determine
               the final type based on the 
@@ -212,6 +211,11 @@ function Write-StatusMessage {
         This value can be set using an environment variable.
             Example: $env:PS_STATUSMESSAGE_MAX_RECURSION_DEPTH = 10
 
+    .PARAMETER LastCall
+        OPTIONAL. Switch. Alias: -lc. Includes the last call off of the callstack to identify the invocation 
+        source of the call. This will be added to the any other messages specified. Used primarily for generating
+        custom error messages.
+
     .PARAMETER ForceWrite
         OPTIONAL. Switch. Alias: -fw. Forces the message to be written to the console even if the message type
         would normally be suppressed because the message type is in the Verbose or Ignore lists.
@@ -297,7 +301,7 @@ function Write-StatusMessage {
         [Parameter(ParameterSetName = "ActionOrWarning")]
         [Alias('aow')]  [Switch]      $ActionOrWarning,
 
-        [Alias('ttr')]  [Boolean]      $TypeTestResult,
+        [Alias('ttr')]  [Boolean]     $TypeTestResult,
         
         [Alias('ts')] [Switch]        $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
         [Alias('l')]  [Switch]        $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
@@ -319,6 +323,8 @@ function Write-StatusMessage {
         [Alias('o')]                  $Object,
         [Alias('rd')] [Int]           $MaxRecursionDepth = 3,
 
+        [Alias('lc')] [Switch]        $LastCall,
+
         [Alias('fw')] [Switch]        $ForceWrite
 
     )
@@ -327,11 +333,11 @@ function Write-StatusMessage {
 
         try {
 
-            $MessageType           = [string]::IsNullOrEmpty($Type) ? $PSCmdlet.ParameterSetName : $Type
-            $IgnoreMessageTypes    = $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES | ConvertFrom-JSON
-            $VerboseMessageTypes   = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
-            $WriteVerboseTypes     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
-            $VariableMessageTypes  = @('SuccessOrFailure','SuccessOrWarning','ActionOrFailure','ActionOrWarning')
+            $MessageType          = [string]::IsNullOrEmpty($Type) ? $PSCmdlet.ParameterSetName : $Type
+            $IgnoreMessageTypes   = $env:PS_STATUSMESSAGE_IGNORE_MESSAGE_TYPES | ConvertFrom-JSON
+            $VerboseMessageTypes  = $env:PS_STATUSMESSAGE_VERBOSE_MESSAGE_TYPES | ConvertFrom-JSON
+            $WriteVerboseTypes    = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_SHOW_VERBOSE_MESSAGES)
+            $VariableMessageTypes = @('SuccessOrFailure','SuccessOrWarning','ActionOrFailure','ActionOrWarning')
 
             if ( ($MessageType -in $VerboseMessageTypes -and $WriteVerboseTypes -eq $false -and $ForceWrite -eq $false) -or 
                  ($MessageType -in $IgnoreMessageTypes -and $ForceWrite -eq $false) ) 
@@ -364,9 +370,11 @@ function Write-StatusMessage {
                     PreSpace             = $PreSpace.ToBool()
                     DebugObject          = $Object
                     MaxRecursionDepth    = $MaxRecursionDepth
+                    IncludeLastCall      = $LastCall
                     MessagePrefix        = $null
                     MessageBanners       = $null
                     DebugObjectPrefix    = $null
+                    InvocationMessage    = $null
                     InvocationSource     = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'Command'
                     InvocationLine       = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'ScriptLineNumber'
                     InvocationFile       = Get-PSCallStack | Select-Object -Skip 2 -First 1 -ExpandProperty 'ScriptName'
