@@ -2,6 +2,17 @@
 A PowerShell module of helper functions. These functions are primarily intended for use in larger workflows
 where many functions are called, lots of data is collected and verbose logging is required.
 
+## Invoke-ConsoleCommand
+A Wrapper for Invoke-Expression that provides an API-like result, including a success/failure indicator, error 
+objects and the duration of the command execution.
+
+## Invoke-HttpRequest
+A Wrapper for Invoke-WebRequest that includes provides an API-like result, including a success/failure indicator, 
+error objects, HTTP Response information (including the final responding URI) and the duration of the command execution.
+
+## Test-Is / Test-IsSomething / Test-IsNothing
+An replacement for [String]::IsNullorEmpty() which also evaluates objects and collections.
+
 ## Write-StatusMessage
 A Write-Host wrapper function that that bundles multiple debugging events into a single call, increasing log
 readability while decreasing the number of calls required.

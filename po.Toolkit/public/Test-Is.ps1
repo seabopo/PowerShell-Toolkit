@@ -2,8 +2,8 @@ Function Test-Is {
     <#
     .DESCRIPTION
         Tests if a value exists. This is a replacement for [String]::IsNullOrEmpty(), which doesn't work reliably 
-        on objects. The function can be used to test for something (Test-IsSomething) or nothing (Test-IsNothing).
-        Using the default function name (Test-Is) will test for something.
+        on objects or collections. The function can be used to test for something (Test-IsSomething) or 
+        nothing (Test-IsNothing). Using the default function name (Test-Is) will test for something.
     
     .OUTPUTS
         [Boolean]
@@ -88,7 +88,7 @@ Function Test-Is {
             $condition = "IsSomething"
         }
 
-        Write-Msg -FunctionResult -m $( 'Condition: {0}' -f $condition ) -o $( 'Result: {0}' -f $result ) #$result
+        Write-Msg -FunctionResult -m $( 'Condition: {0}' -f $condition ) -o $( 'Result: {0}' -f $result )
 
         return $result
     }
