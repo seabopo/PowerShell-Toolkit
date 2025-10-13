@@ -28,6 +28,11 @@ Write-Msg -h -ps -bb -m $( ' Invoke-HttpRequest Test Run - SUCCESSFUL Requests E
   # Initialize the API Key / Bearer Token. api-token.ps1 contains a single line: return '<my api token>'
     $env:CF_API_TOKEN = . '.\api-token.ps1'
 
+  # Test downloading a file.
+    $url  = 'https://is1-ssl.mzstatic.com/image/thumb/B9Oa9v60CboX66lbT4eEGw/3840x2160.jpg'
+    $file = $(Join-Path -Path $PSScriptRoot -ChildPath 'image.jpg' )
+    Invoke-HttpRequest -u $url -f $file
+
   # Tests that should return a successful result.
     Invoke-HttpRequest -u 'https://www.cloudflare.com'
     Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com'

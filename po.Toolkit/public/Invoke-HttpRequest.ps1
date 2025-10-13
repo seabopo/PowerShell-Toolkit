@@ -45,6 +45,9 @@ function Invoke-HttpRequest {
         OPTIONAL. String. Alias: -o. The protocol. Accepted Values: HTTP or HTTPS.
         Default: HTTP
 
+    .PARAMETER OutFile
+        OPTIONAL. String. Alias: -f. The desired path of the output file.
+
     .PARAMETER UseBasicParsing
         OPTIONAL. Switch. Alias: -b. Use a basic, non-DOM parsing model for the content. This is more performant
         but can make the results harder to parse.
@@ -97,6 +100,9 @@ function Invoke-HttpRequest {
         [String] [Alias('o')] $Protocol = 'http',
         
         [Parameter()]
+        [String] [Alias('f')] $OutFile,
+
+        [Parameter()]
         [Switch] [Alias('b')] $UseBasicParsing,
 
         [Parameter()]
@@ -126,7 +132,8 @@ function Invoke-HttpRequest {
             $r = [ordered]@{
                 uri               = $null
                 host              = $null
-                requestHeaders    = @{} #$null
+                requestHeaders    = @{}
+                outfile           = $null
                 success           = $true
                 statusCode        = $null
                 statusDescription = $null
@@ -165,17 +172,21 @@ function Invoke-HttpRequest {
                 $r.requestHeaders += $RequestHeaders
             }
 
+            if ( $null -ne $OutFile ) {
+                $r.outfile = $OutFile
+            }
+
             if ( -not $Silent ) { Write-Msg -p -ps -m $( 'Getting results for URI: {0} ...' -f $r.uri ) }
-
-            $r.startTime = Get-Date
-
+            
             try {
-                
-                if ( [String]::IsNullOrEmpty($r.requestHeaders) ) {
-                    $result = Invoke-WebRequest -Uri $r.uri
-                } else {
-                    $result = Invoke-WebRequest -Uri $r.uri -Headers $r.requestHeaders
-                }
+
+                $p = @{ uri = $r.uri }
+                if ( $r.requestHeaders.count -gt 0 ) { $p.Headers = $r.requestHeaders }
+                if ( Test-IsSomething($r.outfile) )  { $p.OutFile = $r.outfile }
+
+                $r.startTime = Get-Date
+
+                $result = Invoke-WebRequest @p
 
                 $r.duration          = [Math]::Round((New-TimeSpan -Start $r.startTime -End (Get-Date)).TotalSeconds,0).ToString()
                 $r.value             = $result.Content
