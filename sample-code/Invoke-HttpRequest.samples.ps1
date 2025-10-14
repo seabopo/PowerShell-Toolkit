@@ -51,4 +51,8 @@ Write-Msg -h -ps -bb -m $( ' Invoke-HttpRequest Test Run - FAILED Request with E
 
     Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com' -p 'idontexist'
 
+Write-Msg -h -ps -bb -m $( ' Invoke-HttpRequest Test Run - FAILED Request with No Error Message Expected' )
+
+    Invoke-HttpRequest -o 'https' -s 'www.cloudflare.com' -p 'idontexist' -q
+
 exit

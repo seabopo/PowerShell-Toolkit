@@ -148,13 +148,10 @@ function Invoke-HttpRequest {
             }
 
             if ( $PSCmdlet.ParameterSetName -eq 'PSHP' ) {
-                
                 if ( -not $Path.StartsWith('/') ) { $Path = '/' + $Path }
-                
                 $r.uri             = '{0}://{1}{2}' -f $Protocol, $ServerName, $Path
                 $r.host            = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName)
                 $r.requestHeaders += @{ host = $([String]::IsNullOrEmpty($HostName) ? $ServerName : $HostName) }
-
             }
             else {
                 $r.uri = $url
@@ -164,17 +161,11 @@ function Invoke-HttpRequest {
                 $r.requestHeaders += @{ Authorization = $('Bearer {0}' -f $AuthorizationToken) }
             }
 
-            if ( $JSON ) {
-                $r.requestHeaders += @{ Accept = 'application/json' }
-            }
+            if ( $JSON ) { $r.requestHeaders += @{ Accept = 'application/json' } }
 
-            if ( $null -ne $RequestHeaders ) {
-                $r.requestHeaders += $RequestHeaders
-            }
+            if ( $null -ne $RequestHeaders ) { $r.requestHeaders += $RequestHeaders }
 
-            if ( $null -ne $OutFile ) {
-                $r.outfile = $OutFile
-            }
+            if ( $null -ne $OutFile ) { $r.outfile = $OutFile }
 
             if ( -not $Silent ) { Write-Msg -p -ps -m $( 'Getting results for URI: {0} ...' -f $r.uri ) }
             
@@ -200,6 +191,7 @@ function Invoke-HttpRequest {
                                           $r.statusCode, $r.duration,$r.responseUri )
             }
             catch {
+
                 $r.duration          = [Math]::Round((New-TimeSpan -Start $r.startTime -End (Get-Date)).TotalSeconds,0).ToString()
                 $r.success           = $false
                 $r.message           = $_.Exception.Message
@@ -210,15 +202,8 @@ function Invoke-HttpRequest {
             }
             
             if ( -not $Silent ) {
-                if ( $DebugMessagesOnly ) {
-                    Write-Msg -d -il 1 -m $r.message
-                }
-                elseif ( $r.success ) {
-                    Write-Msg -s -il 1 -m $r.message
-                }
-                else {
-                    Write-Msg -e -il 1 -m $r.message
-                }
+                $msgType = $( $DebugMessagesOnly ? 'debug' : ($r.success ? 'success' : 'error') )
+                Write-Msg -t $msgType -il 1 -m $r.message
             }
 
         }
