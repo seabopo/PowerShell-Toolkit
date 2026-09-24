@@ -283,6 +283,20 @@ Write-StatusMessage -v
 $env:PS_STATUSMESSAGE_LABELS     = $false
 $env:PS_STATUSMESSAGE_TIMESTAMPS = $false
 
+#-------------------------------------------------------------------------------
+# Test #B-9: No New Line Tests
+#-------------------------------------------------------------------------------
+
+Write-StatusMessage -p -m " Test #B-9: No New Line testing" -b -ds -ps
+
+Write-StatusMessage -a -m 'Line Part 1 ... ' -NoNewline -TimeStamps
+Write-StatusMessage -a -m 'Line Part 2 ... ' -NoNewline
+Write-StatusMessage -a -m 'Line Part 3'
+
+Write-StatusMessage -p -m 'Line Part 4 ' -NoNewline -TimeStamps
+Write-StatusMessage -w -m 'Line Part 5 ' -il 1 -NoNewline
+Write-StatusMessage -s -m 'Line Part 6' -il 1
+
 #==================================================================================================================
 # Run Debug Object Tests
 #==================================================================================================================

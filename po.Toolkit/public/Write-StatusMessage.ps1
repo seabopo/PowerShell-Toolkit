@@ -220,6 +220,10 @@ function Write-StatusMessage {
         OPTIONAL. Switch. Alias: -fw. Forces the message to be written to the console even if the message type
         would normally be suppressed because the message type is in the Verbose or Ignore lists.
 
+    .PARAMETER NoNewLine
+        OPTIONAL. Switch. Alias: -nnl. Writes the message without a newline character. This parameter is
+        ignored for "MessageObject" writes since objects usually aren't readable without newlines.
+
     .EXAMPLE
         Write-StatusMessage -Type 'Header' -Message 'Starting Testing ...'
 
@@ -240,92 +244,94 @@ function Write-StatusMessage {
 
         [Parameter()]
         [AllowEmptyString()][AllowNull()]
-        [Alias('m')]  [string]         $Message,
+        [Alias('m')]   [string]       $Message,
 
         [Parameter(ParameterSetName = "byTypeName")]
         [ValidateSet('Header','Process','Action','Information','Debug',
                      'Success','Warning','Failure','Error','Exception',
                      'SuccessOrFailure','SuccessOrWarning','ActionOrFailure','ActionOrWarning',
                      'InvocationSource','FunctionCall','FunctionResult')]
-        [Alias('t')]  [String]         $Type,
+        [Alias('t')]   [String]       $Type,
 
         [Parameter(ParameterSetName = "Header")]
-        [Alias('h')]  [Switch]        $Header,
+        [Alias('h')]   [Switch]       $Header,
 
         [Parameter(ParameterSetName = "Process")]
-        [Alias('p')]  [Switch]        $Process,
+        [Alias('p')]   [Switch]       $Process,
 
         [Parameter(ParameterSetName = "Action")]
-        [Alias('a')]  [Switch]        $Action,
+        [Alias('a')]   [Switch]       $Action,
 
         [Parameter(ParameterSetName = "Information")]
-        [Alias('i')]  [Switch]        $Information,
+        [Alias('i')]   [Switch]       $Information,
 
         [Parameter(ParameterSetName = "Debug")]
-        [Alias('d')]  [Switch]        $Dbg,
+        [Alias('d')]   [Switch]       $Dbg,
 
         [Parameter(ParameterSetName = "Success")]
-        [Alias('s')]  [Switch]        $Success,
+        [Alias('s')]   [Switch]       $Success,
 
         [Parameter(ParameterSetName = "Warning")]
-        [Alias('w')]  [Switch]        $Warning,
+        [Alias('w')]   [Switch]       $Warning,
 
         [Parameter(ParameterSetName = "Failure")]
-        [Alias('f')]  [Switch]        $Failure,
+        [Alias('f')]   [Switch]       $Failure,
 
         [Parameter(ParameterSetName = "Error")]
-        [Alias('e')]  [Switch]        $Err,
+        [Alias('e')]   [Switch]       $Err,
 
         [Parameter(ParameterSetName = "Exception")]
-        [Alias('x')]  [Switch]        $Exception,
+        [Alias('x')]   [Switch]       $Exception,
 
         [Parameter(ParameterSetName = "InvocationSource")]
-        [Alias('v')]  [Switch]        $InvocationSource,
+        [Alias('v')]   [Switch]       $InvocationSource,
 
         [Parameter(ParameterSetName = "FunctionCall")]
-        [Alias('c')]  [Switch]        $FunctionCall,
-        [Alias('ip')] [Switch]        $IncludeParameters,
+        [Alias('c')]   [Switch]       $FunctionCall,
+        [Alias('ip')]  [Switch]       $IncludeParameters,
 
         [Parameter(ParameterSetName = "FunctionResult")]
-        [Alias('r')]  [Switch]        $FunctionResult,
+        [Alias('r')]   [Switch]       $FunctionResult,
 
         [Parameter(ParameterSetName = "SuccessOrFailure")]
-        [Alias('sof')]  [Switch]      $SuccessOrFailure,
+        [Alias('sof')] [Switch]       $SuccessOrFailure,
 
         [Parameter(ParameterSetName = "SuccessOrWarning")]
-        [Alias('sow')]  [Switch]      $SuccessOrWarning,
+        [Alias('sow')] [Switch]       $SuccessOrWarning,
 
         [Parameter(ParameterSetName = "ActionOrFailure")]
-        [Alias('aof')]  [Switch]      $ActionOrFailure,
+        [Alias('aof')] [Switch]       $ActionOrFailure,
 
         [Parameter(ParameterSetName = "ActionOrWarning")]
-        [Alias('aow')]  [Switch]      $ActionOrWarning,
+        [Alias('aow')] [Switch]       $ActionOrWarning,
 
-        [Alias('ttr')]  [Boolean]     $TypeTestResult,
+        [Alias('ttr')] [Boolean]      $TypeTestResult,
         
-        [Alias('ts')] [Switch]        $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
-        [Alias('l')]  [Switch]        $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
+        [Alias('ts')]  [Switch]       $TimeStamps = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_TIMESTAMPS),
+        [Alias('l')]   [Switch]       $Labels     = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_LABELS),
 
-        [Alias('il')] [Int]           $IndentationLevel = 0,
-        [Alias('is')] [String]        $IndentationString = $env:PS_STATUSMESSAGE_INDENTATION_STRING,
+        [Alias('il')]  [Int]          $IndentationLevel = 0,
+        [Alias('is')]  [String]       $IndentationString = $env:PS_STATUSMESSAGE_INDENTATION_STRING,
 
-        [Alias('b')]  [Switch]        $Banner,
-        [Alias('bb')] [Switch]        $DoubleBanner,
-        [Alias('bs')] [String]        $BannerString = $env:PS_STATUSMESSAGE_BANNER_STRING,
-        [Alias('bl')] [Int]           $BannerLength = [System.Convert]::ToInt32($env:PS_STATUSMESSAGE_BANNER_LENGTH),
-        [Alias('cb')] [Switch]        $ColorBanners = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_COLOR_BANNERS),
+        [Alias('b')]   [Switch]       $Banner,
+        [Alias('bb')]  [Switch]       $DoubleBanner,
+        [Alias('bs')]  [String]       $BannerString = $env:PS_STATUSMESSAGE_BANNER_STRING,
+        [Alias('bl')]  [Int]          $BannerLength = [System.Convert]::ToInt32($env:PS_STATUSMESSAGE_BANNER_LENGTH),
+        [Alias('cb')]  [Switch]       $ColorBanners = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_COLOR_BANNERS),
 
-        [Alias('rx')] [Switch]        $RethrowException = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS),
+        [Alias('rx')]  [Switch]       $RethrowException = [System.Convert]::ToBoolean($env:PS_STATUSMESSAGE_RETHROW_EXCEPTIONS),
 
-        [Alias('ds')] [Switch]        $DoubleSpace,
-        [Alias('ps')] [Switch]        $PreSpace,
+        [Alias('ds')]  [Switch]       $DoubleSpace,
+        [Alias('ps')]  [Switch]       $PreSpace,
 
         [Alias('o')]                  $Object,
-        [Alias('rd')] [Int]           $MaxRecursionDepth = 3,
+        [Alias('rd')]  [Int]          $MaxRecursionDepth = 3,
 
-        [Alias('lc')] [Switch]        $LastCall,
+        [Alias('lc')]  [Switch]       $LastCall,
 
-        [Alias('fw')] [Switch]        $ForceWrite
+        [Alias('fw')]  [Switch]       $ForceWrite,
+
+        [Alias('nnl')] [Switch]       $NoNewLine
 
     )
 
@@ -370,7 +376,8 @@ function Write-StatusMessage {
                     PreSpace             = $PreSpace.ToBool()
                     DebugObject          = $Object
                     MaxRecursionDepth    = $MaxRecursionDepth
-                    IncludeLastCall      = $LastCall
+                    IncludeLastCall      = $LastCall.ToBool()
+                    NoNewLine            = $NoNewLine.ToBool()
                     MessagePrefix        = $null
                     MessageBanners       = $null
                     DebugObjectPrefix    = $null
