@@ -2,6 +2,21 @@
 A PowerShell module of helper functions. These functions are primarily intended for use in larger workflows
 where many functions are called, lots of data is collected and verbose logging is required.
 
+# Installation
+Install it with PSResourceGet, which comes with PowerShell 7.4 and later:
+```
+Install-PSResource -Name po.Toolkit -Repository PSGallery -Scope CurrentUser
+```
+
+Install it using the older PowerShellGet module:
+```
+Install-Module -Name po.Toolkit -Repository PSGallery -Scope CurrentUser
+```
+
+"Untrusted repository" prompt: PSGallery is untrusted by default. Add -TrustRepository to Install-PSResource, or -Force to Install-Module, to skip it.
+
+Updating later: use Update-PSResource -Name po.Toolkit or Update-Module -Name po.Toolkit.
+
 ## Invoke-ConsoleCommand
 A Wrapper for Invoke-Expression that provides an API-like result, including a success/failure indicator, error 
 objects and the duration of the command execution.

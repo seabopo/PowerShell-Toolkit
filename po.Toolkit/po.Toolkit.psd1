@@ -12,7 +12,7 @@
   RootModule = 'po.Toolkit.psm1'
 
 # Version number of this module.
-  ModuleVersion = '1.1.1'
+  ModuleVersion = '1.1.2'
 
 # Supported PSEditions
   CompatiblePSEditions = @('Core', 'Desktop')
@@ -97,7 +97,7 @@
     PSData = @{
 
       # Tags applied to this module. These help with module discovery in online galleries.
-      Tags = @('Utility Functions','Logging','Debugging')
+      Tags = @('Utility','Logging','Debugging')
 
       # A URL to the license for this module.
         LicenseUri = 'https://github.com/seabopo/PowerShell-Toolkit/blob/main/LICENSE'
